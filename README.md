@@ -24,6 +24,7 @@ Hide desktop icons, keep your Mac awake, switch Dark Mode, clean the screen, eje
 <img src="https://img.shields.io/badge/Swift-5.9-F05138?style=flat-square&logo=swift&logoColor=white" alt="Swift 5.9">
 <img src="https://img.shields.io/badge/SwiftUI-native-0A84FF?style=flat-square" alt="SwiftUI">
 <img src="https://img.shields.io/github/stars/245678000000/SwitchBox?style=flat-square&color=FFCC00" alt="Stars">
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
 
 <br><br>
 
@@ -240,6 +241,27 @@ Developer flags: `--snapshot <dir>` renders every screen, `--showcase <snap> <ou
 - [ ] Signed and notarized builds
 - [ ] Universal binary (Intel and Apple silicon)
 - [ ] More switches: Stage Manager, Focus, AirPods, display resolution
+
+<br>
+
+## License
+
+SwitchBox is open source under the [MIT License](LICENSE). Use it, fork it and build on it freely.
+
+<br>
+
+## Star History
+
+<div align="center">
+
+<a href="https://star-history.com/#245678000000/SwitchBox&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=245678000000/SwitchBox&type=Date&theme=dark">
+    <img src="https://api.star-history.com/svg?repos=245678000000/SwitchBox&type=Date" width="720" alt="Star history chart">
+  </picture>
+</a>
+
+</div>
 
 <br>
 

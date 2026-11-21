@@ -24,6 +24,7 @@
 <img src="https://img.shields.io/badge/Swift-5.9-F05138?style=flat-square&logo=swift&logoColor=white" alt="Swift 5.9">
 <img src="https://img.shields.io/badge/SwiftUI-原生-0A84FF?style=flat-square" alt="SwiftUI">
 <img src="https://img.shields.io/github/stars/245678000000/SwitchBox?style=flat-square&color=FFCC00" alt="Stars">
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT License"></a>
 
 <br><br>
 
@@ -240,6 +241,27 @@ English · Français · 简体中文 · 繁體中文，可以随时在 **设置 
 - [ ] 签名并公证的安装包
 - [ ] 通用二进制（Intel + Apple 芯片）
 - [ ] 更多开关：台前调度、专注模式、AirPods、显示器分辨率
+
+<br>
+
+## 开源协议
+
+SwitchBox 基于 [MIT 协议](LICENSE) 开源，可以自由使用、修改和二次开发。
+
+<br>
+
+## Star 增长趋势
+
+<div align="center">
+
+<a href="https://star-history.com/#245678000000/SwitchBox&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=245678000000/SwitchBox&type=Date&theme=dark">
+    <img src="https://api.star-history.com/svg?repos=245678000000/SwitchBox&type=Date" width="720" alt="Star 增长趋势图">
+  </picture>
+</a>
+
+</div>
 
 <br>
 
