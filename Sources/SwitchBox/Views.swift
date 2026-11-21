@@ -89,12 +89,29 @@ struct SwitchRow: View {
     let id: SwitchID
     @ObservedObject var store: SwitchStore
     @State private var hovering = false
+    @State var expanded = false
 
     private var isOn: Bool { store.states[id] ?? false }
     private var isDisabled: Bool { store.disabled.contains(id) }
     private var isBusy: Bool { store.busy.contains(id) }
+    private var hasOptions: Bool { id == .keepAwake }
 
     var body: some View {
+        VStack(spacing: 0) {
+            mainRow
+            if expanded && hasOptions {
+                durationList
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color.primary.opacity(expanded ? 0.05 : 0))
+        )
+        .clipped()
+    }
+
+    private var mainRow: some View {
         HStack(spacing: 11) {
             SwitchIcon(id: id, size: 28, active: id.isMomentary ? !isDisabled : isOn)
             VStack(alignment: .leading, spacing: 1) {
@@ -109,18 +126,58 @@ struct SwitchRow: View {
                 }
             }
             Spacer(minLength: 8)
+            if hasOptions { expandButton }
             trailing
         }
         .padding(.horizontal, 10)
         .frame(height: 46)
         .background(
             RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Color.primary.opacity(hovering && !isDisabled ? 0.06 : 0))
+                .fill(Color.primary.opacity(hovering && !isDisabled && !expanded ? 0.06 : 0))
         )
         .contentShape(Rectangle())
         .onHover { hovering = $0 }
         .onTapGesture { activate() }
         .animation(.easeOut(duration: 0.12), value: hovering)
+    }
+
+    private var expandButton: some View {
+        Button {
+            withAnimation(.snappy(duration: 0.25)) { expanded.toggle() }
+        } label: {
+            Image(systemName: "chevron.down")
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(expanded ? Color.accentColor : .secondary)
+                .rotationEffect(.degrees(expanded ? 180 : 0))
+                .frame(width: 22, height: 22)
+                .background(
+                    RoundedRectangle(cornerRadius: 6, style: .continuous)
+                        .fill(expanded ? Color.accentColor.opacity(0.14) : Color.primary.opacity(hovering ? 0.08 : 0.05))
+                )
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help("选择时长")
+    }
+
+    private var durationList: some View {
+        VStack(spacing: 0) {
+            Divider().padding(.horizontal, 10).opacity(0.6)
+            VStack(spacing: 1) {
+                ForEach(SwitchStore.awakeOptions, id: \.self) { m in
+                    DurationOption(
+                        title: SwitchStore.durationText(m),
+                        selected: m == store.awakeMinutes,
+                        running: isOn && m == store.awakeMinutes
+                    ) {
+                        store.startKeepAwake(minutes: m)
+                        withAnimation(.snappy(duration: 0.25)) { expanded = false }
+                    }
+                }
+            }
+            .padding(.vertical, 5)
+            .padding(.horizontal, 4)
+        }
     }
 
     @ViewBuilder private var trailing: some View {
@@ -145,6 +202,47 @@ struct SwitchRow: View {
     private func activate() {
         guard !isDisabled, !isBusy else { return }
         if id.isMomentary { store.perform(id) } else { store.set(id, !isOn) }
+    }
+}
+
+private struct DurationOption: View {
+    let title: String
+    let selected: Bool
+    let running: Bool
+    let action: () -> Void
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 0) {
+                Image(systemName: "checkmark")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(hovering ? Color.white : Color.accentColor)
+                    .opacity(selected ? 1 : 0)
+                    .frame(width: 35, alignment: .trailing)
+                    .padding(.trailing, 10)
+                Text(title)
+                    .font(.system(size: 12.5, weight: selected ? .semibold : .regular))
+                Spacer()
+                if running {
+                    Text("进行中")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(hovering ? Color.white : Color.accentColor)
+                        .padding(.horizontal, 6).frame(height: 16)
+                        .background(Capsule().fill(hovering ? Color.white.opacity(0.22) : Color.accentColor.opacity(0.14)))
+                        .padding(.trailing, 10)
+                }
+            }
+            .frame(height: 26)
+            .background(
+                RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .fill(hovering ? Color.accentColor : .clear)
+            )
+            .foregroundStyle(hovering ? AnyShapeStyle(.white) : AnyShapeStyle(.primary))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
     }
 }
 

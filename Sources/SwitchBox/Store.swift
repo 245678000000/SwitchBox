@@ -118,7 +118,7 @@ final class SwitchStore: ObservableObject {
     let cleaner = ScreenCleaner()
     private var ticker: Timer?
 
-    static let awakeOptions = [15, 30, 60, 120, 300, 0]
+    static let awakeOptions = [0, 5, 15, 30, 60, 120, 300, 480]
     static let menuIcons = ["switch.2", "slider.horizontal.3", "square.grid.2x2.fill", "bolt.circle.fill", "togglepower"]
 
     private init() {
@@ -229,6 +229,12 @@ final class SwitchStore: ObservableObject {
         if !id.isMomentary {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { self.refresh() }
         }
+    }
+
+    /// 从菜单里选择时长：立即以该时长开启
+    func startKeepAwake(minutes: Int) {
+        awakeMinutes = minutes
+        set(.keepAwake, true)
     }
 
     /// 快捷键触发
