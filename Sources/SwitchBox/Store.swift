@@ -190,11 +190,11 @@ final class SwitchStore: ObservableObject {
         if enabled.contains(.micMute) { s[.micMute] = Microphone.isMuted }
 
         if let n = Trash.itemCount {
-            sub[.emptyTrash] = "\(n) 个项目"
+            sub[.emptyTrash] = n == 0 ? "废纸篓是空的" : "\(n) 个项目"
             if n == 0 { dis.insert(.emptyTrash) }
         }
         let disks = Disks.ejectable.count
-        sub[.ejectDisks] = "\(disks) 个磁盘"
+        sub[.ejectDisks] = disks == 0 ? "未连接外接磁盘" : "\(disks) 个磁盘可推出"
         if disks == 0 { dis.insert(.ejectDisks) }
 
         states = s; subtitles = sub; disabled = dis
