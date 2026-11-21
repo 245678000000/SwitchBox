@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/macOS-14%2B-black?logo=apple" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white" alt="Swift">
   <img src="https://img.shields.io/badge/UI-SwiftUI-0A84FF" alt="SwiftUI">
+  <a href="https://github.com/245678000000/SwitchBox/releases/latest"><img src="https://img.shields.io/github/v/release/245678000000/SwitchBox?label=download&color=success" alt="Download"></a>
 </p>
 
 <p align="center">
@@ -95,6 +96,12 @@
 - **Light and Dark mode**: every screen is designed for both
 
 ## Installation
+
+### Download (recommended)
+
+Grab **SwitchBox-x.y.z.dmg** from the [latest release](https://github.com/245678000000/SwitchBox/releases/latest), open it and drag SwitchBox into **Applications**.
+
+Requires macOS 14+ on Apple silicon.
 
 ### Build from source
 
@@ -202,7 +209,9 @@ Simplified Chinese strings in the source code are the keys. English and French l
 
 ### 安装
 
-需要 macOS 14 及以上，并安装 Xcode 命令行工具：
+**直接下载（推荐）：** 在 [Releases](https://github.com/245678000000/SwitchBox/releases/latest) 下载 `SwitchBox-x.y.z.dmg`，打开后把 SwitchBox 拖进“应用程序”。
+
+**从源码编译：** 需要 macOS 14 及以上，并安装 Xcode 命令行工具：
 
 ```bash
 git clone https://github.com/245678000000/SwitchBox.git
