@@ -1,27 +1,188 @@
-# SwitchBox
+<p align="center">
+  <img src="docs/icon.png" width="128" alt="SwitchBox icon">
+</p>
 
-macOS 菜单栏系统开关合集（SwiftUI，macOS 14+）。
+<h1 align="center">SwitchBox</h1>
 
-## 使用
-双击 `SwitchBox.app` 运行（建议拖到“应用程序”文件夹）。点击菜单栏图标打开面板。
+<p align="center">
+  <b>All your everyday macOS toggles, one click away in the menu bar.</b><br>
+  Native SwiftUI · Lightweight · No tracking
+</p>
 
-## 功能
-- 开关：隐藏桌面图标、深色模式、保持亮屏、夜览、麦克风静音、自动隐藏程序坞 / 菜单栏、显示隐藏文件
-- 一键操作：屏幕保护、屏幕清洁（长按 esc 3 秒退出）、清空废纸篓、推出磁盘
-- 自定义显示哪些开关及顺序
-- 全局快捷键 + 状态提示浮窗
-- 登录时启动
+<p align="center">
+  <img src="https://img.shields.io/badge/macOS-14%2B-black?logo=apple" alt="macOS 14+">
+  <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white" alt="Swift">
+  <img src="https://img.shields.io/badge/UI-SwiftUI-0A84FF" alt="SwiftUI">
+</p>
 
-## 构建
+<p align="center">
+  <a href="#中文说明">中文说明</a>
+</p>
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/menu.png" width="300" alt="Menu bar panel (light)">
+  &nbsp;&nbsp;
+  <img src="docs/menu-dark.png" width="300" alt="Menu bar panel (dark)">
+</p>
+
+<p align="center">
+  <img src="docs/settings-general.png" width="560" alt="General settings">
+</p>
+
+<table>
+  <tr>
+    <td><img src="docs/settings-customize.png" alt="Customize switches"></td>
+    <td><img src="docs/settings-shortcuts-dark.png" alt="Global shortcuts"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Customize: add, remove and reorder switches</sub></td>
+    <td align="center"><sub>Global shortcuts for every switch</sub></td>
+  </tr>
+</table>
+
+## Features
+
+### Toggles
+
+| | Switch | What it does |
+|---|---|---|
+| 🖥 | **Hide Desktop Icons** | Hides all files on the desktop. Handy for screen recording, demos and screenshots |
+| 🌙 | **Dark Mode** | Switches between Light and Dark appearance |
+| ☕️ | **Keep Awake** | Stops the display from sleeping for 15 min to 5 h, or indefinitely, with a live countdown |
+| 🌅 | **Night Shift** | Turns Night Shift on or off |
+| 🎙 | **Mute Microphone** | Sets input volume to 0 and restores the previous level when turned back on |
+| ⬇️ | **Auto-hide Dock** | Toggles Dock auto-hiding |
+| ⬆️ | **Auto-hide Menu Bar** | Toggles menu bar auto-hiding |
+| 👁 | **Show Hidden Files** | Shows dotfiles in Finder |
+
+### One-click actions
+
+| | Action | What it does |
+|---|---|---|
+| ✨ | **Screen Saver** | Starts the screen saver right away |
+| 🫧 | **Screen Cleaning** | Blacks out every display and locks the keyboard so you can wipe them down. Hold <kbd>esc</kbd> for 3 seconds to exit |
+| 🗑 | **Empty Trash** | Empties the Trash and shows how many items are in it |
+| ⏏️ | **Eject Disks** | Ejects all external drives and disk images |
+
+### Also included
+
+- **Customizable menu**: choose which switches appear and drag to reorder them
+- **Global shortcuts**: assign a hotkey to any switch, with a system-style HUD showing the new state
+- **Permission center**: shows live status for each permission and requests it with one click
+- **Launch at login**
+- **Choice of menu bar icon**
+- **Light and Dark mode**: every screen is designed for both
+
+## Installation
+
+### Build from source
+
+Requires macOS 14+ and the Xcode Command Line Tools (`xcode-select --install`). The full Xcode app is not needed.
+
+```bash
+git clone https://github.com/245678000000/SwitchBox.git
+cd SwitchBox
+./build.sh
+open SwitchBox.app
 ```
-./build.sh        # 生成 SwitchBox.app
-.build/release/SwitchBox --snapshot /tmp/sbsnap   # 导出界面截图（开发用）
+
+For the best experience, move `SwitchBox.app` into `/Applications` (this also makes *Launch at login* more reliable).
+
+> **Note:** The app is ad-hoc signed. If macOS blocks it on first launch, right-click the app and choose **Open**, or run
+> `xattr -dr com.apple.quarantine SwitchBox.app`.
+
+## Permissions
+
+SwitchBox only asks for the permissions a feature actually needs. You can check and grant them all in **Settings → General → Permissions**.
+
+| Permission | Used for | Required? |
+|---|---|---|
+| Automation → System Events | Dark Mode, Dock, menu bar | When you use those switches |
+| Automation → Finder | Empty Trash | When you use Empty Trash |
+| Full Disk Access | Showing the item count in the Trash | Optional |
+
+Global shortcuts use the Carbon hotkey API, so they **do not** need Accessibility access.
+
+## Project structure
+
+```
+Sources/SwitchBox/
+├── SwitchBoxApp.swift     # App entry: menu bar extra and Settings scene
+├── Store.swift            # Switch definitions, state and persistence
+├── Controls.swift         # System integrations and permission checks
+├── Views.swift            # Menu panel and Settings tabs
+├── Design.swift           # Palette, icon tiles, button styles, app icon
+├── HotKeys.swift          # Global hotkeys, shortcut recorder, HUD
+└── ScreenCleaner.swift    # Screen cleaning overlay
 ```
 
-## 目录
-- `Sources/SwitchBox/Controls.swift`  系统功能实现、权限检测
-- `Sources/SwitchBox/Store.swift`     开关定义与状态
-- `Sources/SwitchBox/Views.swift`     菜单面板与设置窗口
-- `Sources/SwitchBox/Design.swift`    配色、图标、按钮样式
-- `Sources/SwitchBox/HotKeys.swift`   全局快捷键、录制控件、提示浮窗
-- `Sources/SwitchBox/ScreenCleaner.swift` 屏幕清洁
+### Developer tools
+
+```bash
+# Render every screen (light and dark) to PNG
+.build/release/SwitchBox --snapshot /tmp/snapshots
+
+# Render the app icon at 1024×1024
+.build/release/SwitchBox --render-icon icon.png
+```
+
+## How it works
+
+| Feature | Implementation |
+|---|---|
+| Keep Awake | `IOPMAssertionCreateWithName` (`PreventUserIdleDisplaySleep`) |
+| Night Shift | Private `CoreBrightness.framework` (`CBBlueLightClient`) |
+| Dark Mode / Dock / menu bar | AppleScript via System Events |
+| Hide Desktop / Hidden Files | `com.apple.finder` defaults, then Finder is relaunched |
+| Microphone | AppleScript `set volume input volume` |
+| Eject Disks | `NSWorkspace.unmountAndEjectDevice(at:)` |
+| Global shortcuts | Carbon `RegisterEventHotKey` |
+| Launch at login | `SMAppService.mainApp` |
+
+> Night Shift relies on a private framework and could stop working after a future macOS update.
+
+## Roadmap
+
+- [ ] English UI localization
+- [ ] Signed and notarized release builds
+- [ ] More switches: Stage Manager, hide widgets, Low Power Mode, Bluetooth, and others
+
+---
+
+## 中文说明
+
+**SwitchBox** 是一个 macOS 菜单栏工具，把常用的系统开关收进菜单栏，一键切换。基于原生 SwiftUI 开发，轻量，不收集任何数据。
+
+### 功能
+
+- **开关**：隐藏桌面图标、深色模式、保持亮屏（可设时长）、夜览、麦克风静音、自动隐藏程序坞、自动隐藏菜单栏、显示隐藏文件
+- **一键操作**：屏幕保护、屏幕清洁（长按 <kbd>esc</kbd> 3 秒退出）、清空废纸篓、推出磁盘
+- **自定义**：选择菜单里显示哪些开关，拖动调整顺序
+- **全局快捷键**：每个开关都可以设快捷键，切换时屏幕上弹出状态浮窗
+- **权限中心**：实时显示每项权限的状态，点一下就能授权
+- **其他**：登录时启动、多种菜单栏图标可选、完整适配浅色和深色模式
+
+### 安装
+
+需要 macOS 14 及以上，并安装 Xcode 命令行工具：
+
+```bash
+git clone https://github.com/245678000000/SwitchBox.git
+cd SwitchBox
+./build.sh
+open SwitchBox.app
+```
+
+建议把 `SwitchBox.app` 拖到“应用程序”文件夹。如果首次打开被系统拦截，请右键点击应用，选择“打开”。
+
+### 权限说明
+
+- **自动化 → 系统事件**：用于深色模式、程序坞、菜单栏
+- **自动化 → 访达**：用于清空废纸篓
+- **完全磁盘访问权限**：可选，用于显示废纸篓里的项目数量
+
+全局快捷键**不需要**辅助功能权限。
