@@ -11,28 +11,28 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
 
     var title: String {
         switch self {
-        case .hideDesktop: "隐藏桌面图标"
-        case .darkMode: "深色模式"
-        case .keepAwake: "保持亮屏"
-        case .screenSaver: "屏幕保护"
-        case .nightShift: "夜览"
-        case .screenClean: "屏幕清洁"
-        case .emptyTrash: "清空废纸篓"
-        case .ejectDisks: "推出磁盘"
-        case .micMute: "麦克风静音"
-        case .dockAutohide: "自动隐藏程序坞"
-        case .menuBarAutohide: "自动隐藏菜单栏"
-        case .showHiddenFiles: "显示隐藏文件"
-        case .trueTone: "原彩显示"
-        case .lowPower: "低电量模式"
-        case .outputMute: "静音"
+        case .hideDesktop: String(localized: "隐藏桌面图标")
+        case .darkMode: String(localized: "深色模式")
+        case .keepAwake: String(localized: "保持亮屏")
+        case .screenSaver: String(localized: "屏幕保护")
+        case .nightShift: String(localized: "夜览")
+        case .screenClean: String(localized: "屏幕清洁")
+        case .emptyTrash: String(localized: "清空废纸篓")
+        case .ejectDisks: String(localized: "推出磁盘")
+        case .micMute: String(localized: "麦克风静音")
+        case .dockAutohide: String(localized: "自动隐藏程序坞")
+        case .menuBarAutohide: String(localized: "自动隐藏菜单栏")
+        case .showHiddenFiles: String(localized: "显示隐藏文件")
+        case .trueTone: String(localized: "原彩显示")
+        case .lowPower: String(localized: "低电量模式")
+        case .outputMute: String(localized: "静音")
         case .wifi: "Wi‑Fi"
-        case .bluetooth: "蓝牙"
-        case .hideWindows: "隐藏窗口"
-        case .lockScreen: "锁定屏幕"
-        case .displaySleep: "显示器休眠"
-        case .clearClipboard: "清空剪贴板"
-        case .xcodeCache: "清理 Xcode 缓存"
+        case .bluetooth: String(localized: "蓝牙")
+        case .hideWindows: String(localized: "隐藏窗口")
+        case .lockScreen: String(localized: "锁定屏幕")
+        case .displaySleep: String(localized: "显示器休眠")
+        case .clearClipboard: String(localized: "清空剪贴板")
+        case .xcodeCache: String(localized: "清理 Xcode 缓存")
         }
     }
 
@@ -65,55 +65,55 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
 
     var detail: String {
         switch self {
-        case .hideDesktop: "隐藏桌面上的所有文件和图标，适合录屏、演示或截图。会自动重启访达。"
-        case .darkMode: "在浅色和深色外观之间切换。首次使用需允许控制“系统事件”。"
-        case .keepAwake: "阻止显示器进入睡眠。可设置持续时间，到时自动关闭。"
-        case .screenSaver: "立即启动屏幕保护程序。"
-        case .nightShift: "开启或关闭夜览，让屏幕颜色更暖。"
-        case .screenClean: "全屏变黑并锁定键盘，方便擦拭屏幕和键盘。长按 Esc 3 秒退出。"
-        case .emptyTrash: "一键清空废纸篓。显示项目数需要给 SwitchBox“完全磁盘访问权限”。"
-        case .ejectDisks: "一键推出所有外接磁盘和磁盘映像。"
-        case .micMute: "把输入音量设为 0，再次切换时恢复之前的音量。"
-        case .dockAutohide: "自动隐藏和显示程序坞。"
-        case .menuBarAutohide: "自动隐藏和显示菜单栏。"
-        case .showHiddenFiles: "在访达中显示以“.”开头的隐藏文件。会自动重启访达。"
-        case .trueTone: "根据环境光自动调整屏幕色彩。"
-        case .lowPower: "降低能耗、延长续航。切换时需要输入管理员密码。"
-        case .outputMute: "静音或恢复系统声音输出。"
-        case .wifi: "打开或关闭 Wi‑Fi。"
-        case .bluetooth: "打开或关闭蓝牙。"
-        case .hideWindows: "一键隐藏所有其他应用的窗口，再次切换时恢复。"
-        case .lockScreen: "立即锁定屏幕。"
-        case .displaySleep: "立即让显示器进入睡眠，不影响后台任务。"
-        case .clearClipboard: "清空剪贴板内容，保护隐私。"
-        case .xcodeCache: "删除 Xcode 的 DerivedData 编译缓存，释放磁盘空间。"
+        case .hideDesktop: String(localized: "隐藏桌面上的所有文件和图标，适合录屏、演示或截图。会自动重启访达。")
+        case .darkMode: String(localized: "在浅色和深色外观之间切换。首次使用需允许控制“系统事件”。")
+        case .keepAwake: String(localized: "阻止显示器进入睡眠。可设置持续时间，到时自动关闭。")
+        case .screenSaver: String(localized: "立即启动屏幕保护程序。")
+        case .nightShift: String(localized: "开启或关闭夜览，让屏幕颜色更暖。")
+        case .screenClean: String(localized: "全屏变黑并锁定键盘，方便擦拭屏幕和键盘。长按 Esc 3 秒退出。")
+        case .emptyTrash: String(localized: "一键清空废纸篓。显示项目数需要给 SwitchBox“完全磁盘访问权限”。")
+        case .ejectDisks: String(localized: "一键推出所有外接磁盘和磁盘映像。")
+        case .micMute: String(localized: "把输入音量设为 0，再次切换时恢复之前的音量。")
+        case .dockAutohide: String(localized: "自动隐藏和显示程序坞。")
+        case .menuBarAutohide: String(localized: "自动隐藏和显示菜单栏。")
+        case .showHiddenFiles: String(localized: "在访达中显示以“.”开头的隐藏文件。会自动重启访达。")
+        case .trueTone: String(localized: "根据环境光自动调整屏幕色彩。")
+        case .lowPower: String(localized: "降低能耗、延长续航。切换时需要输入管理员密码。")
+        case .outputMute: String(localized: "静音或恢复系统声音输出。")
+        case .wifi: String(localized: "打开或关闭 Wi‑Fi。")
+        case .bluetooth: String(localized: "打开或关闭蓝牙。")
+        case .hideWindows: String(localized: "一键隐藏所有其他应用的窗口，再次切换时恢复。")
+        case .lockScreen: String(localized: "立即锁定屏幕。")
+        case .displaySleep: String(localized: "立即让显示器进入睡眠，不影响后台任务。")
+        case .clearClipboard: String(localized: "清空剪贴板内容，保护隐私。")
+        case .xcodeCache: String(localized: "删除 Xcode 的 DerivedData 编译缓存，释放磁盘空间。")
         }
     }
 
     var shortDetail: String {
         switch self {
-        case .hideDesktop: "录屏、演示时隐藏桌面文件"
-        case .darkMode: "切换浅色 / 深色外观"
-        case .keepAwake: "阻止显示器自动睡眠"
-        case .screenSaver: "立即启动屏幕保护程序"
-        case .nightShift: "让屏幕色温更暖"
-        case .screenClean: "黑屏并锁定键盘，方便擦拭"
-        case .emptyTrash: "一键清空废纸篓"
-        case .ejectDisks: "推出所有外接磁盘"
-        case .micMute: "将麦克风输入音量设为 0"
-        case .dockAutohide: "自动隐藏和显示程序坞"
-        case .menuBarAutohide: "自动隐藏和显示菜单栏"
-        case .showHiddenFiles: "在访达中显示隐藏文件"
-        case .trueTone: "根据环境光调整屏幕色彩"
-        case .lowPower: "降低能耗，延长续航"
-        case .outputMute: "静音系统声音"
-        case .wifi: "打开或关闭 Wi‑Fi"
-        case .bluetooth: "打开或关闭蓝牙"
-        case .hideWindows: "隐藏所有其他应用窗口"
-        case .lockScreen: "立即锁定屏幕"
-        case .displaySleep: "立即关闭显示器"
-        case .clearClipboard: "清空剪贴板内容"
-        case .xcodeCache: "删除 DerivedData 释放空间"
+        case .hideDesktop: String(localized: "录屏、演示时隐藏桌面文件")
+        case .darkMode: String(localized: "切换浅色 / 深色外观")
+        case .keepAwake: String(localized: "阻止显示器自动睡眠")
+        case .screenSaver: String(localized: "立即启动屏幕保护程序")
+        case .nightShift: String(localized: "让屏幕色温更暖")
+        case .screenClean: String(localized: "黑屏并锁定键盘，方便擦拭")
+        case .emptyTrash: String(localized: "一键清空废纸篓")
+        case .ejectDisks: String(localized: "推出所有外接磁盘")
+        case .micMute: String(localized: "将麦克风输入音量设为 0")
+        case .dockAutohide: String(localized: "自动隐藏和显示程序坞")
+        case .menuBarAutohide: String(localized: "自动隐藏和显示菜单栏")
+        case .showHiddenFiles: String(localized: "在访达中显示隐藏文件")
+        case .trueTone: String(localized: "根据环境光调整屏幕色彩")
+        case .lowPower: String(localized: "降低能耗，延长续航")
+        case .outputMute: String(localized: "静音系统声音")
+        case .wifi: String(localized: "打开或关闭 Wi‑Fi")
+        case .bluetooth: String(localized: "打开或关闭蓝牙")
+        case .hideWindows: String(localized: "隐藏所有其他应用窗口")
+        case .lockScreen: String(localized: "立即锁定屏幕")
+        case .displaySleep: String(localized: "立即关闭显示器")
+        case .clearClipboard: String(localized: "清空剪贴板内容")
+        case .xcodeCache: String(localized: "删除 DerivedData 释放空间")
         }
     }
 
@@ -124,13 +124,13 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
 
     var actionLabel: String {
         switch self {
-        case .screenSaver, .screenClean: "开始"
-        case .emptyTrash: "清空"
-        case .ejectDisks: "推出"
-        case .lockScreen: "锁定"
-        case .displaySleep: "休眠"
-        case .clearClipboard: "清空"
-        case .xcodeCache: "清理"
+        case .screenSaver, .screenClean: String(localized: "开始")
+        case .emptyTrash: String(localized: "清空")
+        case .ejectDisks: String(localized: "推出")
+        case .lockScreen: String(localized: "锁定")
+        case .displaySleep: String(localized: "休眠")
+        case .clearClipboard: String(localized: "清空")
+        case .xcodeCache: String(localized: "清理")
         default: ""
         }
     }
@@ -158,6 +158,20 @@ final class SwitchStore: ObservableObject {
             HotKeyCenter.shared.register(shortcuts)
         }
     }
+    @Published var darkSchedule: DarkScheduleMode {
+        didSet {
+            UserDefaults.standard.set(darkSchedule.rawValue, forKey: "darkSchedule")
+            if darkSchedule == .sun { LocationProvider.shared.request() }
+            lastDesiredDark = nil
+            checkDarkSchedule()
+            refresh()
+        }
+    }
+    @Published var darkStart: Int { didSet { UserDefaults.standard.set(darkStart, forKey: "darkStart"); lastDesiredDark = nil; checkDarkSchedule(); refresh() } }
+    @Published var darkEnd: Int { didSet { UserDefaults.standard.set(darkEnd, forKey: "darkEnd"); lastDesiredDark = nil; checkDarkSchedule(); refresh() } }
+    @Published var nightShiftAuto = false
+    @Published var ejectExcluded: [String] { didSet { UserDefaults.standard.set(ejectExcluded, forKey: "ejectExcluded"); refresh() } }
+    private var lastDesiredDark: Bool?
     @Published var showHUD: Bool { didSet { UserDefaults.standard.set(showHUD, forKey: "showHUD") } }
     @Published var menuIcon: String { didSet { UserDefaults.standard.set(menuIcon, forKey: "menuIcon") } }
 
@@ -185,6 +199,10 @@ final class SwitchStore: ObservableObject {
         awakeMinutes = d.object(forKey: "awakeMinutes") as? Int ?? 60
         menuIcon = d.string(forKey: "menuIcon") ?? "switch.2"
         showHUD = d.object(forKey: "showHUD") as? Bool ?? true
+        darkSchedule = DarkScheduleMode(rawValue: d.string(forKey: "darkSchedule") ?? "") ?? .manual
+        darkStart = d.object(forKey: "darkStart") as? Int ?? 22 * 60
+        darkEnd = d.object(forKey: "darkEnd") as? Int ?? 7 * 60
+        ejectExcluded = d.stringArray(forKey: "ejectExcluded") ?? []
         if let data = d.data(forKey: "shortcuts"),
            let map = try? JSONDecoder().decode([SwitchID: Shortcut].self, from: data) {
             shortcuts = map
@@ -193,13 +211,18 @@ final class SwitchStore: ObservableObject {
         }
         HotKeyCenter.shared.register(shortcuts)
         HotKeyCenter.shared.handler = { [weak self] id in self?.trigger(id) }
+        LocationProvider.shared.onUpdate = { [weak self] in
+            DispatchQueue.main.async { self?.lastDesiredDark = nil; self?.checkDarkSchedule(); self?.refresh() }
+        }
+        if darkSchedule == .sun { LocationProvider.shared.request() }
 
         keepAwake.onExpire = { [weak self] in Task { @MainActor in self?.refresh() } }
         cleaner.onFinish = { [weak self] in Task { @MainActor in self?.refresh() } }
         refresh()
         ticker = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.refresh() }
+            Task { @MainActor in self?.checkDarkSchedule(); self?.refresh() }
         }
+        checkDarkSchedule()
     }
 
     private func save() {
@@ -232,51 +255,108 @@ final class SwitchStore: ObservableObject {
 
         if let end = keepAwake.endDate {
             let mins = max(1, Int(ceil(end.timeIntervalSinceNow / 60)))
-            sub[.keepAwake] = "剩余 \(Self.durationText(mins))"
+            sub[.keepAwake] = String(localized: "剩余 \(Self.durationText(mins))")
         } else {
             sub[.keepAwake] = Self.durationText(awakeMinutes)
         }
 
-        if nightShift.isAvailable { s[.nightShift] = nightShift.isOn } else { dis.insert(.nightShift); sub[.nightShift] = "此 Mac 不支持" }
+        if let ds = darkScheduleSubtitle() { sub[.darkMode] = ds }
+        if nightShift.isAvailable {
+            nightShiftAuto = nightShift.mode == 1
+            if nightShiftAuto { sub[.nightShift] = String(localized: "日落到日出自动开启") }
+        }
+        if nightShift.isAvailable { s[.nightShift] = nightShift.isOn } else { dis.insert(.nightShift); sub[.nightShift] = String(localized: "此 Mac 不支持") }
 
         if enabled.contains(.micMute) { s[.micMute] = Microphone.isMuted }
         if enabled.contains(.outputMute) { s[.outputMute] = Speaker.isMuted }
 
-        if trueTone.isAvailable { s[.trueTone] = trueTone.isOn } else { dis.insert(.trueTone); sub[.trueTone] = "此显示器不支持" }
+        if trueTone.isAvailable { s[.trueTone] = trueTone.isOn } else { dis.insert(.trueTone); sub[.trueTone] = String(localized: "此显示器不支持") }
 
         if enabled.contains(.lowPower) {
-            if let lp = LowPower.state { s[.lowPower] = lp } else { dis.insert(.lowPower); sub[.lowPower] = "此 Mac 不支持" }
+            if let lp = LowPower.state { s[.lowPower] = lp } else { dis.insert(.lowPower); sub[.lowPower] = String(localized: "此 Mac 不支持") }
         }
 
         if WiFi.isAvailable {
             let on = WiFi.isOn
             s[.wifi] = on
-            sub[.wifi] = on ? (WiFi.ssid ?? "已开启") : "已关闭"
-        } else { dis.insert(.wifi); sub[.wifi] = "未找到 Wi‑Fi 硬件" }
+            sub[.wifi] = on ? (WiFi.ssid ?? String(localized: "已开启")) : String(localized: "已关闭")
+        } else { dis.insert(.wifi); sub[.wifi] = String(localized: "未找到 Wi‑Fi 硬件") }
 
-        if Bluetooth.isAvailable { s[.bluetooth] = Bluetooth.isOn } else { dis.insert(.bluetooth); sub[.bluetooth] = "不可用" }
+        if Bluetooth.isAvailable { s[.bluetooth] = Bluetooth.isOn } else { dis.insert(.bluetooth); sub[.bluetooth] = String(localized: "不可用") }
 
         s[.hideWindows] = WindowHider.isOn
 
         if enabled.contains(.xcodeCache) {
             if let size = xcodeCacheSize {
-                sub[.xcodeCache] = size == 0 ? "没有可清理的缓存" : "可释放 \(XcodeCache.format(size))"
+                sub[.xcodeCache] = size == 0 ? String(localized: "没有可清理的缓存") : String(localized: "可释放 \(XcodeCache.format(size))")
                 if size == 0 { dis.insert(.xcodeCache) }
             } else {
-                sub[.xcodeCache] = "正在计算…"
+                sub[.xcodeCache] = String(localized: "正在计算…")
             }
             updateXcodeCacheSize()
         }
 
         if let n = Trash.itemCount {
-            sub[.emptyTrash] = n == 0 ? "废纸篓是空的" : "\(n) 个项目"
+            sub[.emptyTrash] = n == 0 ? String(localized: "废纸篓是空的") : String(localized: "\(n) 个项目")
             if n == 0 { dis.insert(.emptyTrash) }
         }
-        let disks = Disks.ejectable.count
-        sub[.ejectDisks] = disks == 0 ? "未连接外接磁盘" : "\(disks) 个磁盘可推出"
+        let disks = Disks.ejectable(excluding: ejectExcluded).count
+        sub[.ejectDisks] = disks == 0 ? String(localized: "未连接外接磁盘") : String(localized: "\(disks) 个磁盘可推出")
         if disks == 0 { dis.insert(.ejectDisks) }
 
         states = s; subtitles = sub; disabled = dis
+    }
+
+    // MARK: 深色模式计划
+
+    var sunTimes: (sunrise: Date, sunset: Date)? {
+        let c = LocationProvider.shared.coordinate
+        return Solar.sunTimes(latitude: c.lat, longitude: c.lon)
+    }
+
+    /// 当前时间按计划应该是深色吗？手动模式返回 nil
+    private func desiredDark(at now: Date = Date()) -> Bool? {
+        switch darkSchedule {
+        case .manual: return nil
+        case .sun:
+            guard let t = sunTimes else { return nil }
+            return now < t.sunrise || now >= t.sunset
+        case .custom:
+            let c = Calendar.current.dateComponents([.hour, .minute], from: now)
+            let m = (c.hour ?? 0) * 60 + (c.minute ?? 0)
+            if darkStart == darkEnd { return nil }
+            return darkStart < darkEnd ? (m >= darkStart && m < darkEnd) : (m >= darkStart || m < darkEnd)
+        }
+    }
+
+    /// 只在计划的切换点生效，手动切换会保持到下一个切换点
+    func checkDarkSchedule() {
+        guard let desired = desiredDark() else { return }
+        if desired != lastDesiredDark {
+            lastDesiredDark = desired
+            if Appearance.isDark != desired { Appearance.setDark(desired) }
+        }
+    }
+
+    private func darkScheduleSubtitle() -> String? {
+        let f = DateFormatter(); f.dateFormat = "HH:mm"
+        switch darkSchedule {
+        case .manual: return nil
+        case .sun:
+            guard let t = sunTimes else { return String(localized: "日出日落 · 无法计算") }
+            return Appearance.isDark ? String(localized: "日出 \(f.string(from: t.sunrise)) 关闭") : String(localized: "日落 \(f.string(from: t.sunset)) 开启")
+        case .custom:
+            return String(localized: "\(formatMinutes(darkStart)) – \(formatMinutes(darkEnd)) 自动")
+        }
+    }
+
+    func toggleEjectExcluded(_ path: String) {
+        if let i = ejectExcluded.firstIndex(of: path) { ejectExcluded.remove(at: i) } else { ejectExcluded.append(path) }
+    }
+
+    func setNightShiftAuto(_ on: Bool) {
+        nightShift.setMode(on ? 1 : 0)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { self.refresh() }
     }
 
     private func updateXcodeCacheSize(force: Bool = false) {
@@ -295,9 +375,9 @@ final class SwitchStore: ObservableObject {
 
     static func durationText(_ minutes: Int) -> String {
         switch minutes {
-        case 0: "永久"
-        case ..<60: "\(minutes) 分钟"
-        default: minutes % 60 == 0 ? "\(minutes / 60) 小时" : "\(minutes / 60) 小时 \(minutes % 60) 分钟"
+        case 0: String(localized: "永久")
+        case ..<60: String(localized: "\(minutes) 分钟")
+        default: minutes % 60 == 0 ? String(localized: "\(minutes / 60) 小时") : String(localized: "\(minutes / 60) 小时 \(minutes % 60) 分钟")
         }
     }
 
@@ -340,19 +420,19 @@ final class SwitchStore: ObservableObject {
     func trigger(_ id: SwitchID) {
         refresh()
         if disabled.contains(id) {
-            if showHUD { HUD.shared.show(id: id, message: subtitles[id] ?? "当前不可用", active: false) }
+            if showHUD { HUD.shared.show(id: id, message: subtitles[id] ?? String(localized: "当前不可用"), active: false) }
             NSSound.beep()
             return
         }
         if id.isMomentary {
             if showHUD && ![.screenClean, .screenSaver, .lockScreen, .displaySleep, .clearClipboard, .xcodeCache].contains(id) {
-                HUD.shared.show(id: id, message: "已执行", active: true)
+                HUD.shared.show(id: id, message: String(localized: "已执行"), active: true)
             }
             perform(id)
         } else {
             let on = !(states[id] ?? false)
             set(id, on)
-            if showHUD { HUD.shared.show(id: id, message: on ? "已开启" : "已关闭", active: on) }
+            if showHUD { HUD.shared.show(id: id, message: on ? String(localized: "已开启") : String(localized: "已关闭"), active: on) }
         }
     }
 
@@ -383,7 +463,7 @@ final class SwitchStore: ObservableObject {
             }
         case .ejectDisks:
             busy.insert(id)
-            Disks.ejectAll { _ in self.busy.remove(id); self.refresh() }
+            Disks.ejectAll(excluding: ejectExcluded) { _ in self.busy.remove(id); self.refresh() }
         case .lockScreen:
             closeMenu()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { ScreenLock.lock() }
@@ -392,7 +472,7 @@ final class SwitchStore: ObservableObject {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { ScreenLock.sleepDisplay() }
         case .clearClipboard:
             Clipboard.clear()
-            if showHUD { HUD.shared.show(id: id, message: "剪贴板已清空", active: true) }
+            if showHUD { HUD.shared.show(id: id, message: String(localized: "剪贴板已清空"), active: true) }
         case .xcodeCache:
             busy.insert(id)
             let freed = xcodeCacheSize ?? 0
@@ -402,7 +482,7 @@ final class SwitchStore: ObservableObject {
                     self.busy.remove(id)
                     self.xcodeCacheSize = nil
                     self.updateXcodeCacheSize(force: true)
-                    if self.showHUD { HUD.shared.show(id: id, message: "已释放 \(XcodeCache.format(freed))", active: true) }
+                    if self.showHUD { HUD.shared.show(id: id, message: String(localized: "已释放 \(XcodeCache.format(freed))"), active: true) }
                 }
             }
         default: break

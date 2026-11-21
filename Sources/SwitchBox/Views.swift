@@ -24,7 +24,7 @@ struct MenuPanel: View {
             Divider().opacity(0.5)
             footer
         }
-        .frame(width: 300)
+        .frame(width: 320)
         .onAppear { store.refresh() }
     }
 
@@ -34,7 +34,7 @@ struct MenuPanel: View {
                 .font(.system(size: 13, weight: .semibold))
             Spacer()
             let n = store.activeCount
-            Text(n == 0 ? "全部关闭" : "\(n) 项已开启")
+            (n == 0 ? Text("全部关闭") : Text("\(n) 项已开启"))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(n == 0 ? AnyShapeStyle(.tertiary) : AnyShapeStyle(Color.accentColor))
                 .padding(.horizontal, 8)
@@ -73,13 +73,18 @@ struct MenuPanel: View {
     }
 
     private func openPrefs(_ tab: PrefsTab) {
-        store.prefsTab = tab
+        openPreferences(tab, store: store, openSettings: openSettings)
+    }
+}
+
+@MainActor
+func openPreferences(_ tab: PrefsTab, store: SwitchStore, openSettings: OpenSettingsAction) {
+    store.prefsTab = tab
+    NSApp.activate(ignoringOtherApps: true)
+    openSettings()
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
         NSApp.activate(ignoringOtherApps: true)
-        openSettings()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            NSApp.activate(ignoringOtherApps: true)
-            NSApp.windows.first { $0.identifier?.rawValue.contains("Settings") == true }?.makeKeyAndOrderFront(nil)
-        }
+        NSApp.windows.first { $0.identifier?.rawValue.contains("Settings") == true }?.makeKeyAndOrderFront(nil)
     }
 }
 
@@ -90,17 +95,18 @@ struct SwitchRow: View {
     @ObservedObject var store: SwitchStore
     @State private var hovering = false
     @State var expanded = false
+    @Environment(\.openSettings) private var openSettings
 
     private var isOn: Bool { store.states[id] ?? false }
     private var isDisabled: Bool { store.disabled.contains(id) }
     private var isBusy: Bool { store.busy.contains(id) }
-    private var hasOptions: Bool { id == .keepAwake }
+    private var hasOptions: Bool { [.keepAwake, .darkMode, .nightShift, .ejectDisks].contains(id) }
 
     var body: some View {
         VStack(spacing: 0) {
             mainRow
             if expanded && hasOptions {
-                durationList
+                optionsList
                     .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
@@ -118,8 +124,12 @@ struct SwitchRow: View {
                 Text(id.title)
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(isDisabled ? .secondary : .primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 if let sub = store.subtitles[id] {
                     Text(sub)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.85)
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
                         .contentTransition(.numericText())
@@ -157,27 +167,89 @@ struct SwitchRow: View {
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .help("选择时长")
+        .help("更多选项")
     }
 
-    private var durationList: some View {
+    private var optionsList: some View {
         VStack(spacing: 0) {
             Divider().padding(.horizontal, 10).opacity(0.6)
             VStack(spacing: 1) {
-                ForEach(SwitchStore.awakeOptions, id: \.self) { m in
-                    DurationOption(
-                        title: SwitchStore.durationText(m),
-                        selected: m == store.awakeMinutes,
-                        running: isOn && m == store.awakeMinutes
-                    ) {
-                        store.startKeepAwake(minutes: m)
-                        withAnimation(.snappy(duration: 0.25)) { expanded = false }
-                    }
+                switch id {
+                case .keepAwake: keepAwakeOptions
+                case .darkMode: darkModeOptions
+                case .nightShift: nightShiftOptions
+                case .ejectDisks: ejectOptions
+                default: EmptyView()
                 }
             }
             .padding(.vertical, 5)
             .padding(.horizontal, 4)
         }
+    }
+
+    private func collapse() { withAnimation(.snappy(duration: 0.25)) { expanded = false } }
+
+    private func settingsOption(_ tab: PrefsTab, _ title: String) -> some View {
+        Group {
+            Divider().padding(.horizontal, 8).padding(.vertical, 3).opacity(0.6)
+            OptionRow(title: title, selected: false) {
+                collapse()
+                openPreferences(tab, store: store, openSettings: openSettings)
+            }
+        }
+    }
+
+    @ViewBuilder private var keepAwakeOptions: some View {
+        ForEach(SwitchStore.awakeOptions, id: \.self) { m in
+            OptionRow(title: SwitchStore.durationText(m), selected: m == store.awakeMinutes,
+                      badge: isOn && m == store.awakeMinutes ? "进行中" : nil) {
+                store.startKeepAwake(minutes: m)
+                collapse()
+            }
+        }
+    }
+
+    @ViewBuilder private var darkModeOptions: some View {
+        OptionRow(title: "手动开关", selected: store.darkSchedule == .manual) {
+            store.darkSchedule = .manual; collapse()
+        }
+        OptionRow(title: "根据日出日落自动开关", selected: store.darkSchedule == .sun) {
+            store.darkSchedule = .sun; collapse()
+        }
+        OptionRow(title: String(localized: "从 \(formatMinutes(store.darkStart)) 至 \(formatMinutes(store.darkEnd))"),
+                  selected: store.darkSchedule == .custom) {
+            store.darkSchedule = .custom; collapse()
+        }
+        settingsOption(.general, "设置…")
+    }
+
+    @ViewBuilder private var nightShiftOptions: some View {
+        OptionRow(title: "手动开关", selected: !store.nightShiftAuto) {
+            store.setNightShiftAuto(false); collapse()
+        }
+        OptionRow(title: "根据日出日落自动开关", selected: store.nightShiftAuto) {
+            store.setNightShiftAuto(true); collapse()
+        }
+    }
+
+    @ViewBuilder private var ejectOptions: some View {
+        let vols = Disks.all
+        if vols.isEmpty {
+            Text("未连接外接磁盘")
+                .font(.system(size: 12))
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 45)
+                .frame(height: 26)
+        } else {
+            ForEach(vols, id: \.path) { v in
+                let excluded = store.ejectExcluded.contains(v.path)
+                OptionRow(title: v.lastPathComponent, selected: !excluded, badge: excluded ? "已排除" : nil) {
+                    store.toggleEjectExcluded(v.path)
+                }
+            }
+        }
+        settingsOption(.general, "设置排除项目…")
     }
 
     @ViewBuilder private var trailing: some View {
@@ -205,10 +277,10 @@ struct SwitchRow: View {
     }
 }
 
-private struct DurationOption: View {
+struct OptionRow: View {
     let title: String
     let selected: Bool
-    let running: Bool
+    var badge: String? = nil
     let action: () -> Void
     @State private var hovering = false
 
@@ -221,11 +293,12 @@ private struct DurationOption: View {
                     .opacity(selected ? 1 : 0)
                     .frame(width: 35, alignment: .trailing)
                     .padding(.trailing, 10)
-                Text(title)
+                Text(LocalizedStringKey(title))
                     .font(.system(size: 12.5, weight: selected ? .semibold : .regular))
+                    .lineLimit(1)
                 Spacer()
-                if running {
-                    Text("进行中")
+                if let badge {
+                    Text(LocalizedStringKey(badge))
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(hovering ? Color.white : Color.accentColor)
                         .padding(.horizontal, 6).frame(height: 16)
@@ -288,8 +361,8 @@ struct SettingLabel: View {
         HStack(spacing: 10) {
             SettingIcon(symbol: symbol, color: color)
             VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                if let subtitle { Text(subtitle).font(.system(size: 11)).foregroundStyle(.secondary) }
+                Text(LocalizedStringKey(title))
+                if let subtitle { Text(LocalizedStringKey(subtitle)).font(.system(size: 11)).foregroundStyle(.secondary) }
             }
         }
     }
@@ -306,7 +379,7 @@ struct StatusBadge: View {
         }
         HStack(spacing: 4) {
             Image(systemName: icon)
-            Text(text)
+            Text(LocalizedStringKey(text))
         }
         .font(.system(size: 11, weight: .semibold))
         .foregroundStyle(color)
@@ -323,12 +396,34 @@ struct GeneralTab: View {
     @State private var sysEvents: PermissionStatus = .unknown
     @State private var finder: PermissionStatus = .unknown
     @State private var disk: PermissionStatus = .unknown
+    @State private var language = AppLanguage.current
+    @State private var languageChanged = false
+    @State private var checking = false
+    @State private var updateResult: UpdateResult?
 
     var body: some View {
         Form {
             Section {
                 Toggle(isOn: Binding(get: { store.launchAtLogin }, set: { store.launchAtLogin = $0 })) {
                     SettingLabel(symbol: "power", color: .green, title: "登录时启动", subtitle: "开机后自动出现在菜单栏")
+                }
+                Picker(selection: $language) {
+                    ForEach(AppLanguage.allCases) { Text($0.displayName).tag($0) }
+                } label: {
+                    SettingLabel(symbol: "globe", color: .cyan, title: "语言", subtitle: "选择界面显示的语言")
+                }
+                .onChange(of: language) { _, new in
+                    AppLanguage.apply(new)
+                    languageChanged = true
+                }
+                if languageChanged {
+                    HStack {
+                        Image(systemName: "arrow.triangle.2.circlepath").foregroundStyle(Color.accentColor)
+                        Text("重新启动 SwitchBox 后生效").font(.system(size: 12))
+                        Spacer()
+                        Button("立即重启") { AppLanguage.relaunch() }
+                            .buttonStyle(.borderedProminent).controlSize(.small)
+                    }
                 }
                 LabeledContent {
                     Picker("", selection: $store.menuIcon) {
@@ -347,39 +442,204 @@ struct GeneralTab: View {
                 }
             }
 
-            Section {
-                permissionRow(symbol: "gearshape.2.fill", color: .gray, title: "系统事件",
-                              subtitle: "切换深色模式、程序坞、菜单栏", status: sysEvents) {
-                    request("com.apple.systemevents") { sysEvents = $0 }
-                }
-                permissionRow(symbol: "face.smiling.inverse", color: .blue, title: "访达",
-                              subtitle: "清空废纸篓", status: finder) {
-                    request("com.apple.finder") { finder = $0 }
-                }
-                permissionRow(symbol: "internaldrive.fill", color: .indigo, title: "完全磁盘访问权限",
-                              subtitle: "显示废纸篓里的项目数量（可选）", status: disk) {
-                    Permissions.openFullDiskSettings()
-                }
-            } header: {
-                HStack {
-                    Text("权限")
-                    Spacer()
-                    Button { refreshPermissions() } label: { Image(systemName: "arrow.clockwise") }
-                        .buttonStyle(.borderless)
-                        .help("重新检测")
-                }
-            } footer: {
-                Text("点“授权”会弹出系统对话框，选“允许”即可。如果之前点过“不允许”，请点“去设置”，在“自动化”里找到 SwitchBox 并打开对应开关。")
-                    .font(.system(size: 11))
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            darkModeSection
+            ejectSection
+            permissionSection
+            supportSection
         }
         .formStyle(.grouped)
-        .frame(width: 580, height: 500)
+        .frame(width: 580, height: 640)
         .onAppear { refreshPermissions() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             refreshPermissions()
+        }
+    }
+
+    // MARK: 深色模式
+
+    private var darkModeSection: some View {
+        Section("深色模式") {
+            Picker(selection: $store.darkSchedule) {
+                ForEach(DarkScheduleMode.allCases) { Text($0.title).tag($0) }
+            } label: {
+                SettingLabel(symbol: "moon.stars.fill", color: .indigo, title: "自动切换")
+            }
+            if store.darkSchedule == .custom {
+                DatePicker("开启深色模式", selection: minutesBinding(\.darkStart), displayedComponents: .hourAndMinute)
+                DatePicker("恢复浅色模式", selection: minutesBinding(\.darkEnd), displayedComponents: .hourAndMinute)
+            }
+            if store.darkSchedule == .sun {
+                let loc = LocationProvider.shared.coordinate
+                LabeledContent("今日日出 / 日落") {
+                    if let t = store.sunTimes {
+                        Text("\(t.sunrise.formatted(date: .omitted, time: .shortened)) / \(t.sunset.formatted(date: .omitted, time: .shortened))")
+                            .monospacedDigit()
+                    } else {
+                        Text("无法计算").foregroundStyle(.secondary)
+                    }
+                }
+                LabeledContent {
+                    Button("使用当前位置") { LocationProvider.shared.request() }.controlSize(.small)
+                } label: {
+                    Text("位置")
+                    if loc.precise { Text("已使用你的大致位置") } else { Text("按时区估算，授权定位后更准确") }
+                }
+            }
+        }
+    }
+
+    private func minutesBinding(_ kp: ReferenceWritableKeyPath<SwitchStore, Int>) -> Binding<Date> {
+        Binding(
+            get: { Calendar.current.date(bySettingHour: store[keyPath: kp] / 60, minute: store[keyPath: kp] % 60, second: 0, of: Date()) ?? Date() },
+            set: { d in
+                let c = Calendar.current.dateComponents([.hour, .minute], from: d)
+                store[keyPath: kp] = (c.hour ?? 0) * 60 + (c.minute ?? 0)
+            })
+    }
+
+    // MARK: 推出磁盘
+
+    private var ejectSection: some View {
+        Section {
+            if store.ejectExcluded.isEmpty {
+                Text("没有排除的磁盘，“推出磁盘”会推出所有外接磁盘。")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+            }
+            ForEach(store.ejectExcluded, id: \.self) { path in
+                LabeledContent {
+                    Button { store.toggleEjectExcluded(path) } label: {
+                        Image(systemName: "minus.circle.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(.white, .red)
+                            .font(.system(size: 15))
+                    }
+                    .buttonStyle(.plain)
+                    .help("取消排除")
+                } label: {
+                    HStack(spacing: 10) {
+                        Image(nsImage: NSWorkspace.shared.icon(forFile: path))
+                            .resizable().frame(width: 24, height: 24)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(URL(fileURLWithPath: path).lastPathComponent)
+                            Text(path).font(.system(size: 11)).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            HStack {
+                Menu {
+                    let candidates = Disks.all.filter { !store.ejectExcluded.contains($0.path) }
+                    if candidates.isEmpty {
+                        Text("没有可添加的已连接磁盘")
+                    }
+                    ForEach(candidates, id: \.path) { v in
+                        Button(v.lastPathComponent) { store.toggleEjectExcluded(v.path) }
+                    }
+                    Divider()
+                    Button("选择…") { pickVolume() }
+                } label: {
+                    Label("添加排除项目", systemImage: "plus")
+                }
+                .fixedSize()
+                Spacer()
+            }
+        } header: {
+            Text("推出磁盘时排除")
+        }
+    }
+
+    private func pickVolume() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.directoryURL = URL(fileURLWithPath: "/Volumes")
+        panel.prompt = String(localized: "排除")
+        NSApp.activate(ignoringOtherApps: true)
+        if panel.runModal() == .OK, let url = panel.url, !store.ejectExcluded.contains(url.path) {
+            store.ejectExcluded.append(url.path)
+        }
+    }
+
+    // MARK: 权限
+
+    private var permissionSection: some View {
+        Section {
+            permissionRow(symbol: "gearshape.2.fill", color: .gray, title: "系统事件",
+                          subtitle: "切换深色模式、程序坞、菜单栏", status: sysEvents) {
+                request("com.apple.systemevents") { sysEvents = $0 }
+            }
+            permissionRow(symbol: "face.smiling.inverse", color: .blue, title: "访达",
+                          subtitle: "清空废纸篓", status: finder) {
+                request("com.apple.finder") { finder = $0 }
+            }
+            permissionRow(symbol: "internaldrive.fill", color: .indigo, title: "完全磁盘访问权限",
+                          subtitle: "显示废纸篓里的项目数量（可选）", status: disk) {
+                Permissions.openFullDiskSettings()
+            }
+        } header: {
+            HStack {
+                Text("权限")
+                Spacer()
+                Button { refreshPermissions() } label: { Image(systemName: "arrow.clockwise") }
+                    .buttonStyle(.borderless)
+                    .help("重新检测")
+            }
+        } footer: {
+            Text("点“授权”会弹出系统对话框，选“允许”即可。如果之前点过“不允许”，请点“去设置”，在“自动化”里找到 SwitchBox 并打开对应开关。")
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    // MARK: 更新与支持
+
+    private var supportSection: some View {
+        Section("更新与支持") {
+            LabeledContent {
+                HStack(spacing: 10) {
+                    switch updateResult {
+                    case .upToDate:
+                        Label("已是最新版本", systemImage: "checkmark.circle.fill")
+                            .font(.system(size: 12)).foregroundStyle(.green)
+                    case .available(let v, let url):
+                        Button("下载 \(v)") { NSWorkspace.shared.open(url) }
+                            .buttonStyle(.borderedProminent).controlSize(.small)
+                    case .failed:
+                        Label("检查失败", systemImage: "exclamationmark.triangle.fill")
+                            .font(.system(size: 12)).foregroundStyle(.orange)
+                    case nil: EmptyView()
+                    }
+                    if checking { ProgressView().controlSize(.small) }
+                    Button("检查更新") {
+                        checking = true
+                        updateResult = nil
+                        Updater.check { r in checking = false; updateResult = r }
+                    }
+                    .disabled(checking)
+                }
+            } label: {
+                SettingLabel(symbol: "arrow.down.circle.fill", color: .blue, title: "更新",
+                             subtitle: String(localized: "当前版本：\(AppInfo.version) (\(AppInfo.build))"))
+            }
+            LabeledContent {
+                Button("发送反馈") { AppInfo.sendFeedback() }
+            } label: {
+                SettingLabel(symbol: "bubble.left.and.bubble.right.fill", color: .green, title: "支持",
+                             subtitle: "报告问题或提出建议")
+            }
+            LabeledContent {
+                Link("GitHub", destination: AppInfo.homepage)
+            } label: {
+                SettingLabel(symbol: "chevron.left.forwardslash.chevron.right", color: .gray, title: "项目主页",
+                             subtitle: "开源代码与更新日志")
+            }
+            LabeledContent {
+                Button("退出 SwitchBox") { NSApp.terminate(nil) }
+            } label: {
+                SettingLabel(symbol: "xmark.circle.fill", color: .red, title: "退出")
+            }
         }
     }
 
@@ -475,7 +735,7 @@ struct CustomizeTab: View {
 
     private func sectionHeader(_ title: String, count: Int) -> some View {
         HStack {
-            Text(title).font(.system(size: 12, weight: .semibold))
+            Text(LocalizedStringKey(title)).font(.system(size: 12, weight: .semibold))
             Text("\(count)").font(.system(size: 11, weight: .medium)).foregroundStyle(.secondary)
         }
         .padding(.top, 6)
@@ -587,7 +847,7 @@ struct AboutTab: View {
             Text("SwitchBox")
                 .font(.system(size: 22, weight: .bold))
                 .padding(.top, 8)
-            Text("版本 \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0")")
+            Text("版本 \(AppInfo.version)")
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
                 .padding(.top, 4)
@@ -617,8 +877,8 @@ struct AboutTab: View {
 
     private func stat(_ value: String, _ label: String) -> some View {
         VStack(spacing: 2) {
-            Text(value).font(.system(size: 15, weight: .semibold))
-            Text(label).font(.system(size: 11)).foregroundStyle(.secondary)
+            Text(LocalizedStringKey(value)).font(.system(size: 15, weight: .semibold))
+            Text(LocalizedStringKey(label)).font(.system(size: 11)).foregroundStyle(.secondary)
         }
     }
 }

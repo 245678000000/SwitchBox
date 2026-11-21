@@ -38,7 +38,7 @@ enum DevTools {
             for scheme in [ColorScheme.light, .dark] {
                 let tag = scheme == .light ? "light" : "dark"
                 snap(MenuPanel(store: store), scheme, "\(dir)/menu-\(tag).png")
-                snap(SwitchRow(id: .keepAwake, store: store, expanded: true).frame(width: 288).padding(6), scheme, "\(dir)/awake-\(tag).png")
+                snap(SwitchRow(id: .keepAwake, store: store, expanded: true).frame(width: 308).padding(6), scheme, "\(dir)/awake-\(tag).png")
                 snap(GeneralTab(store: store), scheme, "\(dir)/general-\(tag).png")
                 snap(CustomizeTab(store: store), scheme, "\(dir)/customize-\(tag).png")
                 snap(ShortcutsTab(store: store), scheme, "\(dir)/shortcuts-\(tag).png")

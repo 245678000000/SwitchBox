@@ -147,6 +147,28 @@ final class NightShift {
         return buf.load(fromByteOffset: 1, as: Bool.self)
     }
 
+    /// 0 = 手动, 1 = 日落到日出, 2 = 自定时间
+    var mode: Int32 {
+        guard let client else { return 0 }
+        let sel = NSSelectorFromString("getBlueLightStatus:")
+        guard client.responds(to: sel) else { return 0 }
+        typealias Fn = @convention(c) (AnyObject, Selector, UnsafeMutableRawPointer) -> Bool
+        let fn = unsafeBitCast(client.method(for: sel), to: Fn.self)
+        let buf = UnsafeMutableRawPointer.allocate(byteCount: 256, alignment: 8)
+        defer { buf.deallocate() }
+        memset(buf, 0, 256)
+        guard fn(client, sel, buf) else { return 0 }
+        return buf.load(fromByteOffset: 4, as: Int32.self)
+    }
+
+    func setMode(_ mode: Int32) {
+        guard let client else { return }
+        let sel = NSSelectorFromString("setMode:")
+        guard client.responds(to: sel) else { return }
+        typealias Fn = @convention(c) (AnyObject, Selector, Int32) -> Bool
+        _ = unsafeBitCast(client.method(for: sel), to: Fn.self)(client, sel, mode)
+    }
+
     func set(_ on: Bool) {
         guard let client else { return }
         let sel = NSSelectorFromString("setEnabled:")
@@ -204,7 +226,12 @@ enum Trash {
 // MARK: - 推出磁盘
 
 enum Disks {
-    static var ejectable: [URL] {
+    static func ejectable(excluding excluded: [String] = []) -> [URL] {
+        all.filter { !excluded.contains($0.path) }
+    }
+
+    /// 所有可推出的卷（不含排除）
+    static var all: [URL] {
         let keys: [URLResourceKey] = [.volumeIsEjectableKey, .volumeIsRemovableKey, .volumeIsInternalKey]
         let vols = FileManager.default.mountedVolumeURLs(includingResourceValuesForKeys: keys, options: [.skipHiddenVolumes]) ?? []
         return vols.filter { url in
@@ -213,8 +240,8 @@ enum Disks {
             return v.volumeIsEjectable == true || v.volumeIsRemovable == true || v.volumeIsInternal == false
         }
     }
-    static func ejectAll(completion: @escaping (Int) -> Void) {
-        let vols = ejectable
+    static func ejectAll(excluding excluded: [String], completion: @escaping (Int) -> Void) {
+        let vols = ejectable(excluding: excluded)
         DispatchQueue.global().async {
             var failed = 0
             for url in vols {
@@ -309,7 +336,8 @@ enum LowPower {
         return line.trimmingCharacters(in: .whitespaces).hasSuffix("1")
     }
     static func set(_ on: Bool) {
-        runAppleScript("do shell script \"/usr/bin/pmset -a lowpowermode \(on ? 1 : 0)\" with prompt \"SwitchBox 需要管理员权限来切换低电量模式。\" with administrator privileges")
+        let prompt = String(localized: "SwitchBox 需要管理员权限来切换低电量模式。")
+        runAppleScript("do shell script \"/usr/bin/pmset -a lowpowermode \(on ? 1 : 0)\" with prompt \"\(prompt)\" with administrator privileges")
     }
 }
 

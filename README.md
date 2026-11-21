@@ -33,6 +33,11 @@
   <img src="docs/settings-general.png" width="560" alt="General settings">
 </p>
 
+<p align="center">
+  <img src="docs/keep-awake.png" width="320" alt="Inline options">
+  <br><sub>Inline options: pick a Keep Awake duration, a Dark Mode schedule, or which disks to eject, right from the menu</sub>
+</p>
+
 <table>
   <tr>
     <td><img src="docs/settings-customize.png" alt="Customize switches"></td>
@@ -51,9 +56,9 @@
 | | Switch | What it does |
 |---|---|---|
 | 🖥 | **Hide Desktop Icons** | Hides all files on the desktop. Handy for screen recording, demos and screenshots |
-| 🌙 | **Dark Mode** | Switches between Light and Dark appearance |
+| 🌙 | **Dark Mode** | Switches between Light and Dark appearance, manually, from sunset to sunrise, or on a custom schedule |
 | ☕️ | **Keep Awake** | Stops the display from sleeping for 15 min to 5 h, or indefinitely, with a live countdown |
-| 🌅 | **Night Shift** | Turns Night Shift on or off |
+| 🌅 | **Night Shift** | Turns Night Shift on or off, or schedules it from sunset to sunrise |
 | 🎙 | **Mute Microphone** | Sets input volume to 0 and restores the previous level when turned back on |
 | ⬇️ | **Auto-hide Dock** | Toggles Dock auto-hiding |
 | ⬆️ | **Auto-hide Menu Bar** | Toggles menu bar auto-hiding |
@@ -72,7 +77,7 @@
 | ✨ | **Screen Saver** | Starts the screen saver right away |
 | 🫧 | **Screen Cleaning** | Blacks out every display and locks the keyboard so you can wipe them down. Hold <kbd>esc</kbd> for 3 seconds to exit |
 | 🗑 | **Empty Trash** | Empties the Trash and shows how many items are in it |
-| ⏏️ | **Eject Disks** | Ejects all external drives and disk images |
+| ⏏️ | **Eject Disks** | Ejects all external drives and disk images, skipping any you exclude (for example a Boot Camp partition) |
 | 🔒 | **Lock Screen** | Locks the screen right away |
 | 💤 | **Display Sleep** | Puts the display to sleep without pausing background work |
 | 📋 | **Clear Clipboard** | Clears the clipboard |
@@ -80,6 +85,8 @@
 
 ### Also included
 
+- **Four languages**: English, Français, 简体中文 and 繁體中文
+- **Check for updates** (via GitHub Releases) and **Send feedback** built in
 - **Customizable menu**: choose which switches appear and drag to reorder them
 - **Global shortcuts**: assign a hotkey to any switch, with a system-style HUD showing the new state
 - **Permission center**: shows live status for each permission and requests it with one click
@@ -127,8 +134,14 @@ Sources/SwitchBox/
 ├── Views.swift            # Menu panel and Settings tabs
 ├── Design.swift           # Palette, icon tiles, button styles, app icon
 ├── HotKeys.swift          # Global hotkeys, shortcut recorder, HUD
+├── DarkSchedule.swift     # Dark Mode schedule, sunrise/sunset, location
+├── Support.swift          # Update checker, feedback, language switching
 └── ScreenCleaner.swift    # Screen cleaning overlay
 ```
+
+### Localization
+
+Simplified Chinese strings in the source code are the keys. English and French live in `scripts/translations.py`, and Traditional Chinese is converted automatically. `./build.sh` runs `scripts/gen_strings.py`, which fails if any string is missing a translation.
 
 ### Developer tools
 
@@ -155,6 +168,7 @@ Sources/SwitchBox/
 | Wi‑Fi | `CoreWLAN` (`CWInterface.setPower`) |
 | Bluetooth | `IOBluetoothPreferenceSetControllerPowerState` (private) |
 | Lock Screen | `SACLockScreenImmediate` from `login.framework` (private) |
+| Dark Mode schedule | Built-in NOAA sunrise/sunset calculation; location from `CoreLocation` (reduced accuracy), falling back to a time-zone estimate |
 | Global shortcuts | Carbon `RegisterEventHotKey` |
 | Launch at login | `SMAppService.mainApp` |
 
@@ -162,7 +176,7 @@ Sources/SwitchBox/
 
 ## Roadmap
 
-- [ ] English UI localization
+- [x] Localization: English, French, Simplified and Traditional Chinese
 - [ ] Signed and notarized release builds
 - [ ] More switches: Stage Manager, hide widgets, AirPods connect, Focus / Do Not Disturb, display resolution
 
@@ -176,6 +190,11 @@ Sources/SwitchBox/
 
 - **开关**：隐藏桌面图标、深色模式、保持亮屏（可设时长）、夜览、原彩显示、低电量模式、静音、麦克风静音、Wi‑Fi、蓝牙、隐藏窗口、自动隐藏程序坞、自动隐藏菜单栏、显示隐藏文件
 - **一键操作**：屏幕保护、屏幕清洁（长按 <kbd>esc</kbd> 3 秒退出）、锁定屏幕、显示器休眠、清空废纸篓、推出磁盘、清空剪贴板、清理 Xcode 缓存
+- **深色模式计划**：手动、根据日出日落自动切换，或自定时间段
+- **夜览**：支持根据日出日落自动开关
+- **推出磁盘排除项**：例如排除 BOOTCAMP 分区
+- **多语言**：English / Français / 简体中文 / 繁體中文
+- **检查更新、发送反馈**
 - **自定义**：选择菜单里显示哪些开关，拖动调整顺序
 - **全局快捷键**：每个开关都可以设快捷键，切换时屏幕上弹出状态浮窗
 - **权限中心**：实时显示每项权限的状态，点一下就能授权

@@ -2,6 +2,7 @@
 # 编译并打包成 SwitchBox.app
 set -e
 cd "$(dirname "$0")"
+python3 scripts/gen_strings.py
 swift build -c release
 APP=build/SwitchBox.app
 rm -rf "$APP"
@@ -19,6 +20,7 @@ if [ ! -f Resources/AppIcon.icns ]; then
   iconutil -c icns build/AppIcon.iconset -o Resources/AppIcon.icns
 fi
 cp Resources/AppIcon.icns "$APP/Contents/Resources/"
+cp -R Resources/*.lproj "$APP/Contents/Resources/"
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -28,11 +30,15 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundleIdentifier</key><string>local.switchbox.app</string>
   <key>CFBundleExecutable</key><string>SwitchBox</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0.0</string>
-  <key>CFBundleVersion</key><string>1</string>
+  <key>CFBundleShortVersionString</key><string>1.1.0</string>
+  <key>CFBundleVersion</key><string>2</string>
+  <key>CFBundleDevelopmentRegion</key><string>zh-Hans</string>
+  <key>CFBundleLocalizations</key><array><string>zh-Hans</string><string>zh-Hant</string><string>en</string><string>fr</string></array>
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>LSUIElement</key><true/>
   <key>CFBundleIconFile</key><string>AppIcon</string>
+  <key>NSLocationUsageDescription</key><string>SwitchBox 使用你的大致位置计算日出日落时间，以便自动切换深色模式。</string>
+  <key>NSLocationWhenInUseUsageDescription</key><string>SwitchBox 使用你的大致位置计算日出日落时间，以便自动切换深色模式。</string>
   <key>NSBluetoothAlwaysUsageDescription</key><string>SwitchBox 需要蓝牙权限来打开或关闭蓝牙。</string>
   <key>NSAppleEventsUsageDescription</key><string>SwitchBox 需要控制“系统事件”和“访达”来切换外观、程序坞和清空废纸篓。</string>
 </dict></plist>
