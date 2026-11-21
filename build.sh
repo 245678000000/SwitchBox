@@ -38,4 +38,6 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 PLIST
 codesign --force --deep -s - "$APP"
 rm -rf SwitchBox.app && cp -R "$APP" SwitchBox.app
+# 如果“应用程序”里装过，顺便更新
+if [ -d /Applications/SwitchBox.app ]; then rm -rf /Applications/SwitchBox.app && cp -R "$APP" /Applications/; echo "↻ 已同步更新 /Applications/SwitchBox.app"; fi
 echo "✅ 已生成 SwitchBox.app"
