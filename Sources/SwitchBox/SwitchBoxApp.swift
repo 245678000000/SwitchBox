@@ -30,6 +30,11 @@ enum DevTools {
             if let img = r.nsImage { write(img, to: args[i + 1]) }
             exit(0)
         }
+        if let i = args.firstIndex(of: "--showcase"), i + 3 < args.count {
+            _ = NSApplication.shared
+            Showcase.render(from: args[i + 1], to: args[i + 2], lang: args[i + 3])
+            exit(0)
+        }
         if let i = args.firstIndex(of: "--snapshot"), i + 1 < args.count {
             _ = NSApplication.shared
             NSApp.setActivationPolicy(.accessory)
@@ -39,6 +44,7 @@ enum DevTools {
                 let tag = scheme == .light ? "light" : "dark"
                 snap(MenuPanel(store: store), scheme, "\(dir)/menu-\(tag).png")
                 snap(SwitchRow(id: .keepAwake, store: store, expanded: true).frame(width: 308).padding(6), scheme, "\(dir)/awake-\(tag).png")
+                snap(SwitchRow(id: .darkMode, store: store, expanded: true).frame(width: 308).padding(6), scheme, "\(dir)/darkopts-\(tag).png")
                 snap(GeneralTab(store: store), scheme, "\(dir)/general-\(tag).png")
                 snap(CustomizeTab(store: store), scheme, "\(dir)/customize-\(tag).png")
                 snap(ShortcutsTab(store: store), scheme, "\(dir)/shortcuts-\(tag).png")

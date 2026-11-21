@@ -10,6 +10,9 @@
 "键盘已锁定，可以放心擦拭" = "Keyboard is locked, safe to wipe";
 "长按" = "Hold";
 "3 秒退出" = "for 3 seconds to exit";
+"通用" = "General";
+"自定义" = "Customize";
+"快捷键" = "Shortcuts";
 "隐藏桌面图标" = "Hide Desktop Icons";
 "深色模式" = "Dark Mode";
 "保持亮屏" = "Keep Awake";
@@ -125,9 +128,6 @@
 "设置…" = "Settings…";
 "已排除" = "Excluded";
 "设置排除项目…" = "Set Exclusions…";
-"通用" = "General";
-"自定义" = "Customize";
-"快捷键" = "Shortcuts";
 "关于" = "About";
 "已授权" = "Granted";
 "已拒绝" = "Denied";

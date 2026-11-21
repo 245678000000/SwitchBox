@@ -10,6 +10,9 @@
 "键盘已锁定，可以放心擦拭" = "Le clavier est verrouillé, vous pouvez nettoyer";
 "长按" = "Maintenez";
 "3 秒退出" = "3 secondes pour quitter";
+"通用" = "Général";
+"自定义" = "Personnaliser";
+"快捷键" = "Raccourcis";
 "隐藏桌面图标" = "Masquer le bureau";
 "深色模式" = "Mode sombre";
 "保持亮屏" = "Rester éveillé";
@@ -125,9 +128,6 @@
 "设置…" = "Réglages…";
 "已排除" = "Exclu";
 "设置排除项目…" = "Définir les exclusions…";
-"通用" = "Général";
-"自定义" = "Personnaliser";
-"快捷键" = "Raccourcis";
 "关于" = "À propos";
 "已授权" = "Autorisé";
 "已拒绝" = "Refusé";

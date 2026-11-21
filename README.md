@@ -1,111 +1,160 @@
-<p align="center">
-  <img src="docs/icon.png" width="128" alt="SwitchBox icon">
-</p>
+<div align="center">
 
-<h1 align="center">SwitchBox</h1>
+<a href="README.md"><img src="https://img.shields.io/badge/English-0A84FF?style=for-the-badge" alt="English"></a>
+<a href="README.zh-CN.md"><img src="https://img.shields.io/badge/简体中文-555555?style=for-the-badge" alt="简体中文"></a>
 
-<p align="center">
-  <b>All your everyday macOS toggles, one click away in the menu bar.</b><br>
-  Native SwiftUI · Lightweight · No tracking
-</p>
+<br><br>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/macOS-14%2B-black?logo=apple" alt="macOS 14+">
-  <img src="https://img.shields.io/badge/Swift-5.9%2B-F05138?logo=swift&logoColor=white" alt="Swift">
-  <img src="https://img.shields.io/badge/UI-SwiftUI-0A84FF" alt="SwiftUI">
-  <a href="https://github.com/245678000000/SwitchBox/releases/latest"><img src="https://img.shields.io/github/v/release/245678000000/SwitchBox?label=download&color=success" alt="Download"></a>
-</p>
+<img src="docs/icon.png" width="128" alt="SwitchBox icon">
 
-<p align="center">
-  <a href="#中文说明">中文说明</a>
-</p>
+# SwitchBox
 
----
+**All your everyday macOS toggles, one click away in the menu bar.**
 
-## Screenshots
+Hide desktop icons, keep your Mac awake, switch Dark Mode, clean the screen, eject disks and 17 more, right from the menu bar.
 
-<p align="center">
-  <img src="docs/menu.png" width="300" alt="Menu bar panel (light)">
-  &nbsp;&nbsp;
-  <img src="docs/menu-dark.png" width="300" alt="Menu bar panel (dark)">
-</p>
+<br>
 
-<p align="center">
-  <img src="docs/settings-general.png" width="560" alt="General settings">
-</p>
+<a href="https://github.com/245678000000/SwitchBox/releases/latest"><img src="https://img.shields.io/badge/Download_for_macOS-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Download for macOS" height="44"></a>
 
-<p align="center">
-  <img src="docs/keep-awake.png" width="320" alt="Inline options">
-  <br><sub>Inline options: pick a Keep Awake duration, a Dark Mode schedule, or which disks to eject, right from the menu</sub>
-</p>
+<br><br>
+
+<img src="https://img.shields.io/github/v/release/245678000000/SwitchBox?style=flat-square&color=34C759&label=release" alt="Release">
+<img src="https://img.shields.io/badge/macOS-14%2B-111111?style=flat-square&logo=apple" alt="macOS 14+">
+<img src="https://img.shields.io/badge/Swift-5.9-F05138?style=flat-square&logo=swift&logoColor=white" alt="Swift 5.9">
+<img src="https://img.shields.io/badge/SwiftUI-native-0A84FF?style=flat-square" alt="SwiftUI">
+<img src="https://img.shields.io/github/stars/245678000000/SwitchBox?style=flat-square&color=FFCC00" alt="Stars">
+
+<br><br>
+
+<img src="docs/en/hero.png" width="860" alt="SwitchBox menu bar panel in light and dark mode">
+
+</div>
+
+<br>
+
+## Why SwitchBox
 
 <table>
-  <tr>
-    <td><img src="docs/settings-customize.png" alt="Customize switches"></td>
-    <td><img src="docs/settings-shortcuts-dark.png" alt="Global shortcuts"></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>Customize: add, remove and reorder switches</sub></td>
-    <td align="center"><sub>Global shortcuts for every switch</sub></td>
-  </tr>
+<tr>
+<td width="33%" valign="top">
+
+### ⚡️ One click
+Toggles that normally take you three levels deep into System Settings, a Terminal command or an AppleScript are now a single switch.
+
+</td>
+<td width="33%" valign="top">
+
+### 🪶 Native and light
+Pure SwiftUI with no Electron, no background daemons and no analytics. It just lives quietly in your menu bar.
+
+</td>
+<td width="33%" valign="top">
+
+### 🎛 Yours to arrange
+Choose which switches appear, drag them into your own order and give any of them a global keyboard shortcut.
+
+</td>
+</tr>
 </table>
 
-## Features
+<br>
 
-### Toggles
+## Smart options, right in the menu
 
-| | Switch | What it does |
-|---|---|---|
-| 🖥 | **Hide Desktop Icons** | Hides all files on the desktop. Handy for screen recording, demos and screenshots |
-| 🌙 | **Dark Mode** | Switches between Light and Dark appearance, manually, from sunset to sunrise, or on a custom schedule |
-| ☕️ | **Keep Awake** | Stops the display from sleeping for 15 min to 5 h, or indefinitely, with a live countdown |
-| 🌅 | **Night Shift** | Turns Night Shift on or off, or schedules it from sunset to sunrise |
-| 🎙 | **Mute Microphone** | Sets input volume to 0 and restores the previous level when turned back on |
-| ⬇️ | **Auto-hide Dock** | Toggles Dock auto-hiding |
-| ⬆️ | **Auto-hide Menu Bar** | Toggles menu bar auto-hiding |
-| 👁 | **Show Hidden Files** | Shows dotfiles in Finder |
-| 🎨 | **True Tone** | Adjusts display color to match the ambient light |
-| 🔋 | **Low Power Mode** | Lowers energy use to extend battery life (asks for your admin password) |
-| 🔇 | **Mute** | Mutes or unmutes system audio output |
-| 📶 | **Wi‑Fi** | Turns Wi‑Fi on or off |
-| 🛜 | **Bluetooth** | Turns Bluetooth on or off |
-| 🪟 | **Hide Windows** | Hides every other app's windows and brings them back when toggled off |
+Click the chevron next to a switch to change how it works without opening Settings. Keep your Mac awake for exactly one hour, let Dark Mode follow sunset and sunrise, or put Night Shift on a schedule.
 
-### One-click actions
+<p align="center">
+  <img src="docs/en/inline-options.png" width="820" alt="Inline Dark Mode schedule and Keep Awake duration">
+</p>
 
-| | Action | What it does |
-|---|---|---|
-| ✨ | **Screen Saver** | Starts the screen saver right away |
-| 🫧 | **Screen Cleaning** | Blacks out every display and locks the keyboard so you can wipe them down. Hold <kbd>esc</kbd> for 3 seconds to exit |
-| 🗑 | **Empty Trash** | Empties the Trash and shows how many items are in it |
-| ⏏️ | **Eject Disks** | Ejects all external drives and disk images, skipping any you exclude (for example a Boot Camp partition) |
-| 🔒 | **Lock Screen** | Locks the screen right away |
-| 💤 | **Display Sleep** | Puts the display to sleep without pausing background work |
-| 📋 | **Clear Clipboard** | Clears the clipboard |
-| 🔨 | **Clean Xcode Cache** | Deletes Xcode DerivedData and shows how much space it frees |
+<br>
 
-### Also included
+## Everything in one place
 
-- **Four languages**: English, Français, 简体中文 and 繁體中文
-- **Check for updates** (via GitHub Releases) and **Send feedback** built in
-- **Customizable menu**: choose which switches appear and drag to reorder them
-- **Global shortcuts**: assign a hotkey to any switch, with a system-style HUD showing the new state
-- **Permission center**: shows live status for each permission and requests it with one click
-- **Launch at login**
-- **Choice of menu bar icon**
-- **Light and Dark mode**: every screen is designed for both
+<table>
+<tr>
+<td width="50%" valign="top">
+
+#### Toggles
+
+- 🖥 **Hide Desktop Icons**: a clean desktop for demos and recordings
+- 🌙 **Dark Mode**: manual, sunset to sunrise, or a custom schedule
+- ☕️ **Keep Awake**: 5 min to 8 h, or indefinitely
+- 🌅 **Night Shift**: with automatic sunset to sunrise
+- 🎨 **True Tone**
+- 🔋 **Low Power Mode**
+- 🔇 **Mute** and 🎙 **Mute Microphone**
+- 📶 **Wi‑Fi** and 🛜 **Bluetooth**
+- 🪟 **Hide Windows** of every other app
+- ⬇️ **Auto-hide Dock** and ⬆️ **Auto-hide Menu Bar**
+- 👁 **Show Hidden Files** in Finder
+
+</td>
+<td width="50%" valign="top">
+
+#### One-click actions
+
+- ✨ **Screen Saver**
+- 🫧 **Screen Cleaning**: blacks out the screen and locks the keyboard; hold <kbd>esc</kbd> to exit
+- 🔒 **Lock Screen**
+- 💤 **Display Sleep**
+- 🗑 **Empty Trash**, with an item count
+- ⏏️ **Eject Disks**, with exclusions such as a Boot Camp partition
+- 📋 **Clear Clipboard**
+- 🔨 **Clean Xcode Cache**, showing how much space it frees
+
+</td>
+</tr>
+</table>
+
+<br>
+
+## Make it yours
+
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
+  <img src="docs/en/settings-customize.png" alt="Customize switches">
+  <br><b>Customize</b><br>
+  <sub>Add, remove and reorder switches by dragging</sub>
+</td>
+<td width="50%" align="center" valign="top">
+  <img src="docs/en/settings-shortcuts.png" alt="Global shortcuts">
+  <br><b>Global shortcuts</b><br>
+  <sub>A hotkey for every switch, with a system-style HUD</sub>
+</td>
+</tr>
+</table>
+
+<p align="center">
+  <img src="docs/en/settings-general.png" width="560" alt="General settings">
+  <br><b>General</b><br>
+  <sub>Launch at login, language, menu bar icon, schedules, eject exclusions and a live permission center</sub>
+</p>
+
+<br>
 
 ## Installation
 
-### Download (recommended)
+1. Download **SwitchBox-x.y.z.dmg** from the [latest release](https://github.com/245678000000/SwitchBox/releases/latest).
+2. Open it and drag **SwitchBox** into **Applications**.
+3. Launch it. The icon appears in your menu bar.
 
-Grab **SwitchBox-x.y.z.dmg** from the [latest release](https://github.com/245678000000/SwitchBox/releases/latest), open it and drag SwitchBox into **Applications**.
+> [!NOTE]
+> SwitchBox is ad-hoc signed and not yet notarized. If macOS blocks it the first time, right-click the app and choose **Open**, or run:
+> ```bash
+> xattr -dr com.apple.quarantine /Applications/SwitchBox.app
+> ```
 
-Requires macOS 14+ on Apple silicon.
+**Requirements:** macOS 14 Sonoma or later on Apple silicon.
 
-### Build from source
+<details>
+<summary><b>Build from source</b></summary>
 
-Requires macOS 14+ and the Xcode Command Line Tools (`xcode-select --install`). The full Xcode app is not needed.
+<br>
+
+You need the Xcode Command Line Tools (`xcode-select --install`). The full Xcode app is not required.
 
 ```bash
 git clone https://github.com/245678000000/SwitchBox.git
@@ -114,118 +163,90 @@ cd SwitchBox
 open SwitchBox.app
 ```
 
-For the best experience, move `SwitchBox.app` into `/Applications` (this also makes *Launch at login* more reliable).
+</details>
 
-> **Note:** The app is ad-hoc signed. If macOS blocks it on first launch, right-click the app and choose **Open**, or run
-> `xattr -dr com.apple.quarantine SwitchBox.app`.
+<br>
 
-## Permissions
+## Privacy and permissions
 
-SwitchBox only asks for the permissions a feature actually needs. You can check and grant them all in **Settings → General → Permissions**.
+SwitchBox collects nothing and only asks for a permission when you first use a feature that needs it. You can see the live status of each permission, and grant it with one click, in **Settings → General → Permissions**.
 
-| Permission | Used for | Required? |
+| Permission | Used for | |
 |---|---|---|
-| Automation → System Events | Dark Mode, Dock, menu bar | When you use those switches |
-| Automation → Finder | Empty Trash | When you use Empty Trash |
+| Automation → System Events | Dark Mode, Dock, menu bar | When used |
+| Automation → Finder | Empty Trash | When used |
 | Full Disk Access | Showing the item count in the Trash | Optional |
+| Location | Sunrise and sunset times for schedules | Optional |
 
-Global shortcuts use the Carbon hotkey API, so they **do not** need Accessibility access.
+Global shortcuts use the Carbon hotkey API, so SwitchBox **never** needs Accessibility access.
 
-## Project structure
+<br>
 
-```
-Sources/SwitchBox/
-├── SwitchBoxApp.swift     # App entry: menu bar extra and Settings scene
-├── Store.swift            # Switch definitions, state and persistence
-├── Controls.swift         # System integrations and permission checks
-├── Views.swift            # Menu panel and Settings tabs
-├── Design.swift           # Palette, icon tiles, button styles, app icon
-├── HotKeys.swift          # Global hotkeys, shortcut recorder, HUD
-├── DarkSchedule.swift     # Dark Mode schedule, sunrise/sunset, location
-├── Support.swift          # Update checker, feedback, language switching
-└── ScreenCleaner.swift    # Screen cleaning overlay
-```
+## Languages
 
-### Localization
+English · Français · 简体中文 · 繁體中文. Switch languages any time in **Settings → General**.
 
-Simplified Chinese strings in the source code are the keys. English and French live in `scripts/translations.py`, and Traditional Chinese is converted automatically. `./build.sh` runs `scripts/gen_strings.py`, which fails if any string is missing a translation.
+<br>
 
-### Developer tools
+## FAQ
 
-```bash
-# Render every screen (light and dark) to PNG
-.build/release/SwitchBox --snapshot /tmp/snapshots
+<details>
+<summary><b>Does it work on Intel Macs?</b></summary>
+<br>
+Release builds are currently Apple silicon only. Building from source on an Intel Mac should work.
+</details>
 
-# Render the app icon at 1024×1024
-.build/release/SwitchBox --render-icon icon.png
-```
+<details>
+<summary><b>Why did a permission reset after I updated?</b></summary>
+<br>
+Because the app is ad-hoc signed, macOS may treat each new build as a different app. Grant the permission again in Settings → General.
+</details>
 
-## How it works
+<details>
+<summary><b>Night Shift, True Tone or Bluetooth stopped working after a macOS update</b></summary>
+<br>
+These switches rely on private system frameworks that Apple can change at any time. Please <a href="https://github.com/245678000000/SwitchBox/issues/new">open an issue</a>.
+</details>
+
+<details>
+<summary><b>For developers: how it works</b></summary>
+
+<br>
 
 | Feature | Implementation |
 |---|---|
-| Keep Awake | `IOPMAssertionCreateWithName` (`PreventUserIdleDisplaySleep`) |
-| Night Shift | Private `CoreBrightness.framework` (`CBBlueLightClient`) |
+| Keep Awake | `IOPMAssertionCreateWithName` |
+| Night Shift / True Tone | `CoreBrightness` (`CBBlueLightClient`, `CBTrueToneClient`) |
 | Dark Mode / Dock / menu bar | AppleScript via System Events |
 | Hide Desktop / Hidden Files | `com.apple.finder` defaults, then Finder is relaunched |
-| Microphone | AppleScript `set volume input volume` |
+| Wi‑Fi | `CoreWLAN` |
+| Bluetooth | `IOBluetoothPreferenceSetControllerPowerState` |
+| Lock Screen | `SACLockScreenImmediate` |
 | Eject Disks | `NSWorkspace.unmountAndEjectDevice(at:)` |
-| True Tone | Private `CoreBrightness.framework` (`CBTrueToneClient`) |
-| Low Power Mode | `pmset -a lowpowermode` via an admin-privileged AppleScript |
-| Wi‑Fi | `CoreWLAN` (`CWInterface.setPower`) |
-| Bluetooth | `IOBluetoothPreferenceSetControllerPowerState` (private) |
-| Lock Screen | `SACLockScreenImmediate` from `login.framework` (private) |
-| Dark Mode schedule | Built-in NOAA sunrise/sunset calculation; location from `CoreLocation` (reduced accuracy), falling back to a time-zone estimate |
+| Schedules | Built-in NOAA sunrise/sunset calculation with `CoreLocation` |
 | Global shortcuts | Carbon `RegisterEventHotKey` |
-| Launch at login | `SMAppService.mainApp` |
+| Launch at login | `SMAppService` |
 
-> Night Shift, True Tone, Bluetooth and Lock Screen rely on private APIs and could stop working after a future macOS update.
+Developer flags: `--snapshot <dir>` renders every screen, `--showcase <snap> <out> <en|zh>` builds the README images, and `--render-icon <file>` renders the app icon.
+
+</details>
+
+<br>
 
 ## Roadmap
 
-- [x] Localization: English, French, Simplified and Traditional Chinese
-- [ ] Signed and notarized release builds
-- [ ] More switches: Stage Manager, hide widgets, AirPods connect, Focus / Do Not Disturb, display resolution
+- [x] English, French, Simplified and Traditional Chinese
+- [x] Dark Mode and Night Shift schedules
+- [ ] Signed and notarized builds
+- [ ] Universal binary (Intel and Apple silicon)
+- [ ] More switches: Stage Manager, Focus, AirPods, display resolution
 
----
+<br>
 
-## 中文说明
+<div align="center">
 
-**SwitchBox** 是一个 macOS 菜单栏工具，把常用的系统开关收进菜单栏，一键切换。基于原生 SwiftUI 开发，轻量，不收集任何数据。
+**If SwitchBox saves you a few clicks, a ⭐️ would mean a lot.**
 
-### 功能
+<sub>[Report a bug](https://github.com/245678000000/SwitchBox/issues/new) · [Releases](https://github.com/245678000000/SwitchBox/releases)</sub>
 
-- **开关**：隐藏桌面图标、深色模式、保持亮屏（可设时长）、夜览、原彩显示、低电量模式、静音、麦克风静音、Wi‑Fi、蓝牙、隐藏窗口、自动隐藏程序坞、自动隐藏菜单栏、显示隐藏文件
-- **一键操作**：屏幕保护、屏幕清洁（长按 <kbd>esc</kbd> 3 秒退出）、锁定屏幕、显示器休眠、清空废纸篓、推出磁盘、清空剪贴板、清理 Xcode 缓存
-- **深色模式计划**：手动、根据日出日落自动切换，或自定时间段
-- **夜览**：支持根据日出日落自动开关
-- **推出磁盘排除项**：例如排除 BOOTCAMP 分区
-- **多语言**：English / Français / 简体中文 / 繁體中文
-- **检查更新、发送反馈**
-- **自定义**：选择菜单里显示哪些开关，拖动调整顺序
-- **全局快捷键**：每个开关都可以设快捷键，切换时屏幕上弹出状态浮窗
-- **权限中心**：实时显示每项权限的状态，点一下就能授权
-- **其他**：登录时启动、多种菜单栏图标可选、完整适配浅色和深色模式
-
-### 安装
-
-**直接下载（推荐）：** 在 [Releases](https://github.com/245678000000/SwitchBox/releases/latest) 下载 `SwitchBox-x.y.z.dmg`，打开后把 SwitchBox 拖进“应用程序”。
-
-**从源码编译：** 需要 macOS 14 及以上，并安装 Xcode 命令行工具：
-
-```bash
-git clone https://github.com/245678000000/SwitchBox.git
-cd SwitchBox
-./build.sh
-open SwitchBox.app
-```
-
-建议把 `SwitchBox.app` 拖到“应用程序”文件夹。如果首次打开被系统拦截，请右键点击应用，选择“打开”。
-
-### 权限说明
-
-- **自动化 → 系统事件**：用于深色模式、程序坞、菜单栏
-- **自动化 → 访达**：用于清空废纸篓
-- **完全磁盘访问权限**：可选，用于显示废纸篓里的项目数量
-
-全局快捷键**不需要**辅助功能权限。
+</div>
