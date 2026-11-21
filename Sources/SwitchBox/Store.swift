@@ -3,7 +3,9 @@ import ServiceManagement
 
 enum SwitchID: String, CaseIterable, Identifiable, Codable {
     case hideDesktop, darkMode, keepAwake, screenSaver, nightShift, screenClean,
-         emptyTrash, ejectDisks, micMute, dockAutohide, menuBarAutohide, showHiddenFiles
+         emptyTrash, ejectDisks, micMute, dockAutohide, menuBarAutohide, showHiddenFiles,
+         trueTone, lowPower, outputMute, wifi, bluetooth, hideWindows,
+         lockScreen, displaySleep, clearClipboard, xcodeCache
 
     var id: String { rawValue }
 
@@ -21,6 +23,16 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
         case .dockAutohide: "自动隐藏程序坞"
         case .menuBarAutohide: "自动隐藏菜单栏"
         case .showHiddenFiles: "显示隐藏文件"
+        case .trueTone: "原彩显示"
+        case .lowPower: "低电量模式"
+        case .outputMute: "静音"
+        case .wifi: "Wi‑Fi"
+        case .bluetooth: "蓝牙"
+        case .hideWindows: "隐藏窗口"
+        case .lockScreen: "锁定屏幕"
+        case .displaySleep: "显示器休眠"
+        case .clearClipboard: "清空剪贴板"
+        case .xcodeCache: "清理 Xcode 缓存"
         }
     }
 
@@ -38,6 +50,16 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
         case .dockAutohide: "dock.rectangle"
         case .menuBarAutohide: "menubar.rectangle"
         case .showHiddenFiles: "eye.fill"
+        case .trueTone: "circle.lefthalf.filled"
+        case .lowPower: "battery.25percent"
+        case .outputMute: "speaker.slash.fill"
+        case .wifi: "wifi"
+        case .bluetooth: "antenna.radiowaves.left.and.right"
+        case .hideWindows: "macwindow.on.rectangle"
+        case .lockScreen: "lock.fill"
+        case .displaySleep: "moon.zzz.fill"
+        case .clearClipboard: "doc.on.clipboard.fill"
+        case .xcodeCache: "hammer.fill"
         }
     }
 
@@ -55,6 +77,16 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
         case .dockAutohide: "自动隐藏和显示程序坞。"
         case .menuBarAutohide: "自动隐藏和显示菜单栏。"
         case .showHiddenFiles: "在访达中显示以“.”开头的隐藏文件。会自动重启访达。"
+        case .trueTone: "根据环境光自动调整屏幕色彩。"
+        case .lowPower: "降低能耗、延长续航。切换时需要输入管理员密码。"
+        case .outputMute: "静音或恢复系统声音输出。"
+        case .wifi: "打开或关闭 Wi‑Fi。"
+        case .bluetooth: "打开或关闭蓝牙。"
+        case .hideWindows: "一键隐藏所有其他应用的窗口，再次切换时恢复。"
+        case .lockScreen: "立即锁定屏幕。"
+        case .displaySleep: "立即让显示器进入睡眠，不影响后台任务。"
+        case .clearClipboard: "清空剪贴板内容，保护隐私。"
+        case .xcodeCache: "删除 Xcode 的 DerivedData 编译缓存，释放磁盘空间。"
         }
     }
 
@@ -72,17 +104,33 @@ enum SwitchID: String, CaseIterable, Identifiable, Codable {
         case .dockAutohide: "自动隐藏和显示程序坞"
         case .menuBarAutohide: "自动隐藏和显示菜单栏"
         case .showHiddenFiles: "在访达中显示隐藏文件"
+        case .trueTone: "根据环境光调整屏幕色彩"
+        case .lowPower: "降低能耗，延长续航"
+        case .outputMute: "静音系统声音"
+        case .wifi: "打开或关闭 Wi‑Fi"
+        case .bluetooth: "打开或关闭蓝牙"
+        case .hideWindows: "隐藏所有其他应用窗口"
+        case .lockScreen: "立即锁定屏幕"
+        case .displaySleep: "立即关闭显示器"
+        case .clearClipboard: "清空剪贴板内容"
+        case .xcodeCache: "删除 DerivedData 释放空间"
         }
     }
 
     /// 一次性动作（打开后自动回弹）
-    var isMomentary: Bool { [.screenSaver, .emptyTrash, .ejectDisks, .screenClean].contains(self) }
+    var isMomentary: Bool {
+        [.screenSaver, .emptyTrash, .ejectDisks, .screenClean, .lockScreen, .displaySleep, .clearClipboard, .xcodeCache].contains(self)
+    }
 
     var actionLabel: String {
         switch self {
         case .screenSaver, .screenClean: "开始"
         case .emptyTrash: "清空"
         case .ejectDisks: "推出"
+        case .lockScreen: "锁定"
+        case .displaySleep: "休眠"
+        case .clearClipboard: "清空"
+        case .xcodeCache: "清理"
         default: ""
         }
     }
@@ -115,6 +163,10 @@ final class SwitchStore: ObservableObject {
 
     let keepAwake = KeepAwake()
     let nightShift = NightShift()
+    let trueTone = TrueTone()
+    private var xcodeCacheSize: Int64?
+    private var xcodeSizing = false
+    private var xcodeCheckedAt = Date.distantPast
     let cleaner = ScreenCleaner()
     private var ticker: Timer?
 
@@ -188,6 +240,33 @@ final class SwitchStore: ObservableObject {
         if nightShift.isAvailable { s[.nightShift] = nightShift.isOn } else { dis.insert(.nightShift); sub[.nightShift] = "此 Mac 不支持" }
 
         if enabled.contains(.micMute) { s[.micMute] = Microphone.isMuted }
+        if enabled.contains(.outputMute) { s[.outputMute] = Speaker.isMuted }
+
+        if trueTone.isAvailable { s[.trueTone] = trueTone.isOn } else { dis.insert(.trueTone); sub[.trueTone] = "此显示器不支持" }
+
+        if enabled.contains(.lowPower) {
+            if let lp = LowPower.state { s[.lowPower] = lp } else { dis.insert(.lowPower); sub[.lowPower] = "此 Mac 不支持" }
+        }
+
+        if WiFi.isAvailable {
+            let on = WiFi.isOn
+            s[.wifi] = on
+            sub[.wifi] = on ? (WiFi.ssid ?? "已开启") : "已关闭"
+        } else { dis.insert(.wifi); sub[.wifi] = "未找到 Wi‑Fi 硬件" }
+
+        if Bluetooth.isAvailable { s[.bluetooth] = Bluetooth.isOn } else { dis.insert(.bluetooth); sub[.bluetooth] = "不可用" }
+
+        s[.hideWindows] = WindowHider.isOn
+
+        if enabled.contains(.xcodeCache) {
+            if let size = xcodeCacheSize {
+                sub[.xcodeCache] = size == 0 ? "没有可清理的缓存" : "可释放 \(XcodeCache.format(size))"
+                if size == 0 { dis.insert(.xcodeCache) }
+            } else {
+                sub[.xcodeCache] = "正在计算…"
+            }
+            updateXcodeCacheSize()
+        }
 
         if let n = Trash.itemCount {
             sub[.emptyTrash] = n == 0 ? "废纸篓是空的" : "\(n) 个项目"
@@ -198,6 +277,20 @@ final class SwitchStore: ObservableObject {
         if disks == 0 { dis.insert(.ejectDisks) }
 
         states = s; subtitles = sub; disabled = dis
+    }
+
+    private func updateXcodeCacheSize(force: Bool = false) {
+        guard !xcodeSizing, force || Date().timeIntervalSince(xcodeCheckedAt) > 60 else { return }
+        xcodeSizing = true
+        DispatchQueue.global(qos: .utility).async {
+            let size = XcodeCache.size()
+            DispatchQueue.main.async {
+                self.xcodeCacheSize = size
+                self.xcodeSizing = false
+                self.xcodeCheckedAt = Date()
+                self.refresh()
+            }
+        }
     }
 
     static func durationText(_ minutes: Int) -> String {
@@ -223,7 +316,13 @@ final class SwitchStore: ObservableObject {
         case .keepAwake: on ? keepAwake.start(minutes: awakeMinutes) : keepAwake.stop()
         case .nightShift: nightShift.set(on)
         case .micMute: Microphone.setMuted(on)
-        case .screenClean, .screenSaver, .emptyTrash, .ejectDisks:
+        case .outputMute: Speaker.setMuted(on)
+        case .trueTone: trueTone.set(on)
+        case .lowPower: DispatchQueue.main.async { LowPower.set(on); self.refresh() }
+        case .wifi: WiFi.set(on)
+        case .bluetooth: Bluetooth.set(on)
+        case .hideWindows: WindowHider.set(on)
+        case .screenClean, .screenSaver, .emptyTrash, .ejectDisks, .lockScreen, .displaySleep, .clearClipboard, .xcodeCache:
             perform(id)
         }
         if !id.isMomentary {
@@ -246,7 +345,7 @@ final class SwitchStore: ObservableObject {
             return
         }
         if id.isMomentary {
-            if showHUD && id != .screenClean && id != .screenSaver {
+            if showHUD && ![.screenClean, .screenSaver, .lockScreen, .displaySleep, .clearClipboard, .xcodeCache].contains(id) {
                 HUD.shared.show(id: id, message: "已执行", active: true)
             }
             perform(id)
@@ -285,6 +384,27 @@ final class SwitchStore: ObservableObject {
         case .ejectDisks:
             busy.insert(id)
             Disks.ejectAll { _ in self.busy.remove(id); self.refresh() }
+        case .lockScreen:
+            closeMenu()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { ScreenLock.lock() }
+        case .displaySleep:
+            closeMenu()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { ScreenLock.sleepDisplay() }
+        case .clearClipboard:
+            Clipboard.clear()
+            if showHUD { HUD.shared.show(id: id, message: "剪贴板已清空", active: true) }
+        case .xcodeCache:
+            busy.insert(id)
+            let freed = xcodeCacheSize ?? 0
+            DispatchQueue.global(qos: .utility).async {
+                XcodeCache.clean()
+                DispatchQueue.main.async {
+                    self.busy.remove(id)
+                    self.xcodeCacheSize = nil
+                    self.updateXcodeCacheSize(force: true)
+                    if self.showHUD { HUD.shared.show(id: id, message: "已释放 \(XcodeCache.format(freed))", active: true) }
+                }
+            }
         default: break
         }
     }

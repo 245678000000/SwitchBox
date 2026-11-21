@@ -1,5 +1,6 @@
 import AppKit
 import IOKit.pwr_mgt
+import CoreWLAN
 
 // MARK: - 小工具
 
@@ -258,5 +259,164 @@ enum Permissions {
     }
     static func openFullDiskSettings() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles")!)
+    }
+}
+
+// MARK: - 原彩显示（私有框架 CoreBrightness）
+
+final class TrueTone {
+    private let client: NSObject?
+
+    init() {
+        dlopen("/System/Library/PrivateFrameworks/CoreBrightness.framework/CoreBrightness", RTLD_NOW)
+        client = (NSClassFromString("CBTrueToneClient") as? NSObject.Type)?.init()
+    }
+
+    private func getBool(_ name: String) -> Bool {
+        guard let client else { return false }
+        let sel = NSSelectorFromString(name)
+        guard client.responds(to: sel) else { return false }
+        typealias Fn = @convention(c) (AnyObject, Selector) -> Bool
+        return unsafeBitCast(client.method(for: sel), to: Fn.self)(client, sel)
+    }
+
+    var isAvailable: Bool { getBool("supported") && getBool("available") }
+    var isOn: Bool { getBool("enabled") }
+
+    func set(_ on: Bool) {
+        guard let client else { return }
+        let sel = NSSelectorFromString("setEnabled:")
+        guard client.responds(to: sel) else { return }
+        typealias Fn = @convention(c) (AnyObject, Selector, Bool) -> Bool
+        _ = unsafeBitCast(client.method(for: sel), to: Fn.self)(client, sel, on)
+    }
+}
+
+// MARK: - 低电量模式（pmset，需要管理员密码）
+
+enum LowPower {
+    /// nil 表示不支持
+    static var state: Bool? {
+        let p = Process()
+        let pipe = Pipe()
+        p.executableURL = URL(fileURLWithPath: "/usr/bin/pmset")
+        p.arguments = ["-g"]
+        p.standardOutput = pipe
+        do { try p.run() } catch { return nil }
+        let out = String(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+        p.waitUntilExit()
+        guard let line = out.split(separator: "\n").first(where: { $0.contains("lowpowermode") || $0.contains("powermode") }) else { return nil }
+        return line.trimmingCharacters(in: .whitespaces).hasSuffix("1")
+    }
+    static func set(_ on: Bool) {
+        runAppleScript("do shell script \"/usr/bin/pmset -a lowpowermode \(on ? 1 : 0)\" with prompt \"SwitchBox 需要管理员权限来切换低电量模式。\" with administrator privileges")
+    }
+}
+
+// MARK: - 静音
+
+enum Speaker {
+    static var isMuted: Bool {
+        runAppleScript("output muted of (get volume settings)")?.booleanValue ?? false
+    }
+    static func setMuted(_ on: Bool) {
+        runAppleScript("set volume output muted \(on)")
+    }
+}
+
+// MARK: - Wi-Fi
+
+
+enum WiFi {
+    static var interface: CWInterface? { CWWiFiClient.shared().interface() }
+    static var isAvailable: Bool { interface != nil }
+    static var isOn: Bool { interface?.powerOn() ?? false }
+    static var ssid: String? { interface?.ssid() }
+    static func set(_ on: Bool) {
+        try? interface?.setPower(on)
+    }
+}
+
+// MARK: - 蓝牙（IOBluetooth 私有函数）
+
+enum Bluetooth {
+    private typealias Getter = @convention(c) () -> Int32
+    private typealias Setter = @convention(c) (Int32) -> Void
+    private static let handle = dlopen("/System/Library/Frameworks/IOBluetooth.framework/IOBluetooth", RTLD_NOW)
+    private static let getter: Getter? = dlsym(handle, "IOBluetoothPreferenceGetControllerPowerState").map { unsafeBitCast($0, to: Getter.self) }
+    private static let setter: Setter? = dlsym(handle, "IOBluetoothPreferenceSetControllerPowerState").map { unsafeBitCast($0, to: Setter.self) }
+
+    static var isAvailable: Bool { getter != nil && setter != nil }
+    static var isOn: Bool { (getter?() ?? 0) != 0 }
+    static func set(_ on: Bool) { setter?(on ? 1 : 0) }
+}
+
+// MARK: - 隐藏窗口
+
+enum WindowHider {
+    private static var hiddenPIDs: [pid_t] = []
+    static var isOn: Bool { !hiddenPIDs.isEmpty }
+
+    static func set(_ on: Bool) {
+        if on {
+            let me = ProcessInfo.processInfo.processIdentifier
+            let apps = NSWorkspace.shared.runningApplications.filter {
+                $0.activationPolicy == .regular && !$0.isHidden && $0.processIdentifier != me
+            }
+            hiddenPIDs = apps.map(\.processIdentifier)
+            apps.forEach { $0.hide() }
+        } else {
+            for pid in hiddenPIDs { NSRunningApplication(processIdentifier: pid)?.unhide() }
+            hiddenPIDs.removeAll()
+        }
+    }
+}
+
+// MARK: - 锁定屏幕 / 显示器休眠
+
+enum ScreenLock {
+    private typealias Fn = @convention(c) () -> Int32
+    static func lock() {
+        let h = dlopen("/System/Library/PrivateFrameworks/login.framework/Versions/Current/login", RTLD_NOW)
+        if let sym = dlsym(h, "SACLockScreenImmediate") {
+            _ = unsafeBitCast(sym, to: Fn.self)()
+        } else {
+            sleepDisplay()
+        }
+    }
+    static func sleepDisplay() {
+        shell("/usr/bin/pmset", ["displaysleepnow"])
+    }
+}
+
+// MARK: - 剪贴板
+
+enum Clipboard {
+    static func clear() { NSPasteboard.general.clearContents() }
+}
+
+// MARK: - Xcode 缓存（DerivedData）
+
+enum XcodeCache {
+    static let url = FileManager.default.homeDirectoryForCurrentUser
+        .appendingPathComponent("Library/Developer/Xcode/DerivedData")
+
+    static func size() -> Int64 {
+        guard let e = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.totalFileAllocatedSizeKey],
+                                                     options: [], errorHandler: nil) else { return 0 }
+        var total: Int64 = 0
+        for case let f as URL in e {
+            total += Int64((try? f.resourceValues(forKeys: [.totalFileAllocatedSizeKey]).totalFileAllocatedSize) ?? 0)
+        }
+        return total
+    }
+
+    static func clean() {
+        let items = (try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil)) ?? []
+        items.forEach { try? FileManager.default.removeItem(at: $0) }
+    }
+
+    static func format(_ bytes: Int64) -> String {
+        ByteCountFormatter.string(fromByteCount: bytes, countStyle: .file)
     }
 }

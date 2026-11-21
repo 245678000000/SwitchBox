@@ -33,6 +33,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>LSUIElement</key><true/>
   <key>CFBundleIconFile</key><string>AppIcon</string>
+  <key>NSBluetoothAlwaysUsageDescription</key><string>SwitchBox 需要蓝牙权限来打开或关闭蓝牙。</string>
   <key>NSAppleEventsUsageDescription</key><string>SwitchBox 需要控制“系统事件”和“访达”来切换外观、程序坞和清空废纸篓。</string>
 </dict></plist>
 PLIST

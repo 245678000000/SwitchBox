@@ -58,6 +58,12 @@
 | ⬇️ | **Auto-hide Dock** | Toggles Dock auto-hiding |
 | ⬆️ | **Auto-hide Menu Bar** | Toggles menu bar auto-hiding |
 | 👁 | **Show Hidden Files** | Shows dotfiles in Finder |
+| 🎨 | **True Tone** | Adjusts display color to match the ambient light |
+| 🔋 | **Low Power Mode** | Lowers energy use to extend battery life (asks for your admin password) |
+| 🔇 | **Mute** | Mutes or unmutes system audio output |
+| 📶 | **Wi‑Fi** | Turns Wi‑Fi on or off |
+| 🛜 | **Bluetooth** | Turns Bluetooth on or off |
+| 🪟 | **Hide Windows** | Hides every other app's windows and brings them back when toggled off |
 
 ### One-click actions
 
@@ -67,6 +73,10 @@
 | 🫧 | **Screen Cleaning** | Blacks out every display and locks the keyboard so you can wipe them down. Hold <kbd>esc</kbd> for 3 seconds to exit |
 | 🗑 | **Empty Trash** | Empties the Trash and shows how many items are in it |
 | ⏏️ | **Eject Disks** | Ejects all external drives and disk images |
+| 🔒 | **Lock Screen** | Locks the screen right away |
+| 💤 | **Display Sleep** | Puts the display to sleep without pausing background work |
+| 📋 | **Clear Clipboard** | Clears the clipboard |
+| 🔨 | **Clean Xcode Cache** | Deletes Xcode DerivedData and shows how much space it frees |
 
 ### Also included
 
@@ -140,16 +150,21 @@ Sources/SwitchBox/
 | Hide Desktop / Hidden Files | `com.apple.finder` defaults, then Finder is relaunched |
 | Microphone | AppleScript `set volume input volume` |
 | Eject Disks | `NSWorkspace.unmountAndEjectDevice(at:)` |
+| True Tone | Private `CoreBrightness.framework` (`CBTrueToneClient`) |
+| Low Power Mode | `pmset -a lowpowermode` via an admin-privileged AppleScript |
+| Wi‑Fi | `CoreWLAN` (`CWInterface.setPower`) |
+| Bluetooth | `IOBluetoothPreferenceSetControllerPowerState` (private) |
+| Lock Screen | `SACLockScreenImmediate` from `login.framework` (private) |
 | Global shortcuts | Carbon `RegisterEventHotKey` |
 | Launch at login | `SMAppService.mainApp` |
 
-> Night Shift relies on a private framework and could stop working after a future macOS update.
+> Night Shift, True Tone, Bluetooth and Lock Screen rely on private APIs and could stop working after a future macOS update.
 
 ## Roadmap
 
 - [ ] English UI localization
 - [ ] Signed and notarized release builds
-- [ ] More switches: Stage Manager, hide widgets, Low Power Mode, Bluetooth, and others
+- [ ] More switches: Stage Manager, hide widgets, AirPods connect, Focus / Do Not Disturb, display resolution
 
 ---
 
@@ -159,8 +174,8 @@ Sources/SwitchBox/
 
 ### 功能
 
-- **开关**：隐藏桌面图标、深色模式、保持亮屏（可设时长）、夜览、麦克风静音、自动隐藏程序坞、自动隐藏菜单栏、显示隐藏文件
-- **一键操作**：屏幕保护、屏幕清洁（长按 <kbd>esc</kbd> 3 秒退出）、清空废纸篓、推出磁盘
+- **开关**：隐藏桌面图标、深色模式、保持亮屏（可设时长）、夜览、原彩显示、低电量模式、静音、麦克风静音、Wi‑Fi、蓝牙、隐藏窗口、自动隐藏程序坞、自动隐藏菜单栏、显示隐藏文件
+- **一键操作**：屏幕保护、屏幕清洁（长按 <kbd>esc</kbd> 3 秒退出）、锁定屏幕、显示器休眠、清空废纸篓、推出磁盘、清空剪贴板、清理 Xcode 缓存
 - **自定义**：选择菜单里显示哪些开关，拖动调整顺序
 - **全局快捷键**：每个开关都可以设快捷键，切换时屏幕上弹出状态浮窗
 - **权限中心**：实时显示每项权限的状态，点一下就能授权

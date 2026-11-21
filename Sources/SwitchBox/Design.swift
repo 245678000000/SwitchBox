@@ -25,6 +25,16 @@ extension SwitchID {
         case .dockAutohide:    Tint(h: 0.380, s: 0.68, b: 0.76)
         case .menuBarAutohide: Tint(h: 0.450, s: 0.66, b: 0.74)
         case .showHiddenFiles: Tint(h: 0.930, s: 0.60, b: 0.92)
+        case .trueTone:        Tint(h: 0.140, s: 0.70, b: 0.95)
+        case .lowPower:        Tint(h: 0.130, s: 0.88, b: 0.92)
+        case .outputMute:      Tint(h: 0.000, s: 0.00, b: 0.45)
+        case .wifi:            Tint(h: 0.590, s: 0.80, b: 0.95)
+        case .bluetooth:       Tint(h: 0.610, s: 0.85, b: 0.90)
+        case .hideWindows:     Tint(h: 0.360, s: 0.70, b: 0.72)
+        case .lockScreen:      Tint(h: 0.620, s: 0.20, b: 0.40)
+        case .displaySleep:    Tint(h: 0.720, s: 0.55, b: 0.55)
+        case .clearClipboard:  Tint(h: 0.080, s: 0.55, b: 0.70)
+        case .xcodeCache:      Tint(h: 0.580, s: 0.85, b: 0.85)
         }
     }
 }
