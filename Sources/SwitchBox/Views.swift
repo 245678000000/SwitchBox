@@ -872,7 +872,7 @@ struct AboutTab: View {
                 .padding(.bottom, 18)
         }
         .padding(.top, 34)
-        .frame(width: 460, height: 380)
+        .frame(width: 580, height: 420)
     }
 
     private func stat(_ value: String, _ label: String) -> some View {
