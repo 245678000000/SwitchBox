@@ -143,3 +143,37 @@ struct PillButtonStyle: ButtonStyle {
             .contentShape(Capsule())
     }
 }
+
+// MARK: - 菜单栏图标
+
+/// 菜单栏图标：自绘的 SwitchBox 标志（方盒里一个开关），避免与系统“控制中心”图标混淆
+enum MenuBarIcon {
+    static let brand = "switchbox"
+
+    static func image(_ name: String) -> NSImage {
+        if name != brand, let img = NSImage(systemSymbolName: name, accessibilityDescription: "SwitchBox") {
+            return img
+        }
+        return brandImage
+    }
+
+    static let brandImage: NSImage = {
+        let img = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { _ in
+            NSColor.black.setStroke()
+            NSColor.black.setFill()
+            let box = NSBezierPath(roundedRect: NSRect(x: 1.25, y: 1.25, width: 15.5, height: 15.5), xRadius: 4.6, yRadius: 4.6)
+            box.lineWidth = 1.5
+            box.stroke()
+            // 开关：实心胶囊 + 镂空滑块（开启状态）
+            let pill = NSRect(x: 4, y: 6, width: 10, height: 6)
+            let path = NSBezierPath(roundedRect: pill, xRadius: 3, yRadius: 3)
+            path.append(NSBezierPath(ovalIn: NSRect(x: pill.maxX - 5.2, y: pill.minY + 0.8, width: 4.4, height: 4.4)))
+            path.windingRule = .evenOdd
+            path.fill()
+            return true
+        }
+        img.isTemplate = true
+        img.accessibilityDescription = "SwitchBox"
+        return img
+    }()
+}

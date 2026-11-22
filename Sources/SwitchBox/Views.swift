@@ -427,7 +427,7 @@ struct GeneralTab: View {
                 }
                 LabeledContent {
                     Picker("", selection: $store.menuIcon) {
-                        ForEach(SwitchStore.menuIcons, id: \.self) { Image(systemName: $0).tag($0) }
+                        ForEach(SwitchStore.menuIcons, id: \.self) { Image(nsImage: MenuBarIcon.image($0)).tag($0) }
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()

@@ -10,7 +10,7 @@ struct SwitchBoxApp: App {
         MenuBarExtra {
             MenuPanel(store: store)
         } label: {
-            Image(systemName: store.menuIcon)
+            Image(nsImage: MenuBarIcon.image(store.menuIcon))
         }
         .menuBarExtraStyle(.window)
 

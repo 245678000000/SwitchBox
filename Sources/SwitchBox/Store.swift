@@ -185,7 +185,7 @@ final class SwitchStore: ObservableObject {
     private var ticker: Timer?
 
     static let awakeOptions = [0, 5, 15, 30, 60, 120, 300, 480]
-    static let menuIcons = ["switch.2", "slider.horizontal.3", "square.grid.2x2.fill", "bolt.circle.fill", "togglepower"]
+    static let menuIcons = [MenuBarIcon.brand, "slider.horizontal.3", "square.grid.2x2.fill", "bolt.circle.fill", "togglepower"]
 
     private init() {
         let d = UserDefaults.standard
@@ -197,7 +197,8 @@ final class SwitchStore: ObservableObject {
             enabled = SwitchID.defaultEnabled
         }
         awakeMinutes = d.object(forKey: "awakeMinutes") as? Int ?? 60
-        menuIcon = d.string(forKey: "menuIcon") ?? "switch.2"
+        let savedIcon = d.string(forKey: "menuIcon") ?? MenuBarIcon.brand
+        menuIcon = Self.menuIcons.contains(savedIcon) ? savedIcon : MenuBarIcon.brand
         showHUD = d.object(forKey: "showHUD") as? Bool ?? true
         darkSchedule = DarkScheduleMode(rawValue: d.string(forKey: "darkSchedule") ?? "") ?? .manual
         darkStart = d.object(forKey: "darkStart") as? Int ?? 22 * 60
